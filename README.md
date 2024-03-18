@@ -1,2 +1,8 @@
 # infrastructure
-GitOps infrastructure rrepository
+GitOps infrastructure repository for my homelab.
+
+## Components
+
+- Network
+- Kubernetes (soon™️)
+
