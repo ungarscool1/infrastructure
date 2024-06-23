@@ -1,0 +1,96 @@
+service:
+  ui:
+    type: ClusterIP
+    nodePort: null
+  manager:
+    type: ClusterIP
+    nodePort: ""
+
+persistence:
+  defaultClass: true
+  defaultFsType: ext4
+  defaultMkfsParams: ""
+  defaultClassReplicaCount: 2 # set to 2 due to the fact that we have 2 nodes
+  defaultDataLocality: disabled
+  reclaimPolicy: Delete
+  migratable: true
+  # -- Set NFS mount options for Longhorn StorageClass for RWX volumes
+  nfsOptions: ""
+  backingImage:
+    # -- Setting that allows you to use a backing image in a Longhorn StorageClass.
+    enable: true
+    # -- Backing image to be used for creating and restoring volumes in a Longhorn StorageClass. When no backing images are available, specify the data source type and parameters that Longhorn can use to create a backing image.
+    name: ~
+    # -- Data source type of a backing image used in a Longhorn StorageClass.
+    # If the backing image exists in the cluster, Longhorn uses this setting to verify the image.
+    # If the backing image does not exist, Longhorn creates one using the specified data source type.
+    dataSourceType: ~
+    # -- Data source parameters of a backing image used in a Longhorn StorageClass.
+    # You can specify a JSON string of a map. (Example: `'{\"url\":\"https://backing-image-example.s3-region.amazonaws.com/test-backing-image\"}'`)
+    dataSourceParameters: ~
+    # -- Expected SHA-512 checksum of a backing image used in a Longhorn StorageClass.
+    expectedChecksum: ~
+  # -- Setting that allows you to enable automatic snapshot removal during filesystem trim for a Longhorn StorageClass. (Options: "ignored", "enabled", "disabled")
+  removeSnapshotsDuringFilesystemTrim: ignored
+
+preUpgradeChecker:
+  jobEnabled: false
+
+defaultSettings:
+  # -- Endpoint used to access the backupstore. (Options: "NFS", "CIFS", "AWS", "GCP", "AZURE")
+  backupTarget: ~ # Will be set to "nfs" later
+  # -- Name of the Kubernetes secret associated with the backup target.
+  backupTargetCredentialSecret: ~
+  # -- PriorityClass for system-managed Longhorn components.
+  # This setting can help prevent Longhorn components from being evicted under Node Pressure.
+  # Notice that this will be applied to Longhorn user-deployed components by default if there are no priority class values set yet, such as `longhornManager.priorityClass`.
+  priorityClass: &defaultPriorityClassNameRef "longhorn-critical"
+  allowCollectingLonghornUsageMetrics: false
+  # -- Setting that temporarily prevents all attempts to purge volume snapshots.
+  disableSnapshotPurge: ~
+  # -- Maximum snapshot count for a volume. The value should be between 2 to 250
+  snapshotMaxCount: 2
+
+longhornManager:
+  log:
+    format: plain
+  priorityClass: *defaultPriorityClassNameRef
+  tolerations: []
+  nodeSelector: {}
+  serviceAnnotations: {}
+
+longhornDriver:
+  priorityClass: *defaultPriorityClassNameRef
+  tolerations: []
+  nodeSelector: {}
+
+longhornUI:
+  replicas: 2
+  priorityClass: *defaultPriorityClassNameRef
+  tolerations: []
+  nodeSelector: {}
+
+ingress:
+  enabled: true
+  host: longhorn.apps.legodard.fr
+  tls: true
+  secureBackends: false
+  tlsSecret: longhorn.local-tls
+  path: /
+  annotations:
+    cert-manager.io/cluster-issuer: "letsencrypt-prod"
+    kubernetes.io/tls-acme: true
+
+# -- Setting that allows you to enable pod security policies (PSPs) that allow privileged Longhorn pods to start. This setting applies only to clusters running Kubernetes 1.25 and earlier, and with the built-in Pod Security admission controller enabled.
+enablePSP: false
+
+# -- Annotation for the Longhorn Manager DaemonSet pods. This setting is optional.
+annotations: {}
+
+serviceAccount:
+  annotations: {}
+
+metrics:
+  serviceMonitor:
+    # -- Setting that allows the creation of a Prometheus ServiceMonitor resource for Longhorn Manager components.
+    enabled: false
