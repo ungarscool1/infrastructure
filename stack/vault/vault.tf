@@ -16,6 +16,7 @@ resource "kubectl_manifest" "secret" {
     clientId : base64encode(hcp_service_principal_key.self.client_id),
     clientSecret : base64encode(hcp_service_principal_key.self.client_secret)
   })
+  sensitive_fields = ["data"]
 }
 
 resource "kubectl_manifest" "authentication" {
