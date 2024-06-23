@@ -14,13 +14,13 @@ spec:
     chart: cert-manager
     repoURL: https://charts.jetstack.io
     targetRevision: v1.15.0
-    parameters:
-    - name: crds.enabled
-      value: "true"
-    - name: crds.keep
-      value: "true"
-    - name: prometheus.enabled
-      value: "false"
+    helm:
+      values: |
+        crds:
+          enabled: true
+          keep: true
+        prometheus:
+          enabled: false
   syncPolicy:
         automated:
           selfHeal: true
