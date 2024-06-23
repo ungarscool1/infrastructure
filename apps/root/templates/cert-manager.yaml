@@ -11,8 +11,8 @@ spec:
     server: https://kubernetes.default.svc
   project: default
   source:
-    path: deploy/charts/cert-manager
-    repoURL: https://github.com/cert-manager/cert-manager.git
+    chart: cert-manager
+    repoURL: https://charts.jetstack.io
     targetRevision: v1.15.0
     parameters:
     - name: crds.enabled
