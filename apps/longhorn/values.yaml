@@ -1,7 +1,7 @@
 longhorn:
   defaultSettings:
     allowCollectingLonghornUsageMetrics: false
-    backupTarget: "s3://longhorn-backup@auto/longhorn"
+    backupTarget: "s3://longhorn-backup@eu-south-1/longhorn"
     backupTargetCredentialSecret: "s3-secret"
   persistence:
     defaultClass: true
