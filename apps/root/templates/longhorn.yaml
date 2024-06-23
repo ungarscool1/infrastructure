@@ -1,0 +1,28 @@
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+  name: longhorn
+  namespace: argocd
+spec:
+  project: default
+  sources:
+    - chart: longhorn
+      repoURL: https://charts.longhorn.io/
+      targetRevision: v1.6.2
+      helm:
+        values: |
+          preUpgradeChecker:
+            jobEnabled: false
+          ingress:
+            enabled: true
+            host: longhorn.apps.legodard.fr
+            tls: true
+            secureBackends: false
+            tlsSecret: longhorn.local-tls
+            path: /
+            annotations:
+              cert-manager.io/cluster-issuer: "letsencrypt-prod"
+              kubernetes.io/tls-acme: true
+  destination:
+    server: https://kubernetes.default.svc
+    namespace: longhorn-system
