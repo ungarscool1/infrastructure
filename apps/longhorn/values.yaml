@@ -1,6 +1,8 @@
 longhorn:
   defaultSettings:
     allowCollectingLonghornUsageMetrics: false
+    backupTarget: "CIFS"
+    backupTargetCredentialSecret: "cifs-secret"
   persistence:
     defaultClass: true
     migratable: true
