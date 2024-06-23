@@ -6,23 +6,9 @@ metadata:
 spec:
   project: default
   sources:
-    - chart: longhorn
-      repoURL: https://charts.longhorn.io/
-      targetRevision: v1.6.2
-      helm:
-        values: |
-          preUpgradeChecker:
-            jobEnabled: false
-          ingress:
-            enabled: true
-            host: longhorn.apps.legodard.fr
-            tls: true
-            secureBackends: false
-            tlsSecret: longhorn.local-tls
-            path: /
-            annotations:
-              cert-manager.io/cluster-issuer: "letsencrypt-prod"
-              kubernetes.io/tls-acme: true
+    - path: apps/longhorn
+      repoURL: https://github.com/ungarscool1/infrastructure.git
+      targetRevision: setup-longhorn
   destination:
     server: https://kubernetes.default.svc
     namespace: longhorn-system
