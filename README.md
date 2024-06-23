@@ -5,4 +5,5 @@ GitOps infrastructure repository for my homelab.
 
 - Network
 - Kubernetes (soon™️)
-
+  - Applications (managed by ArgoCD)
+  - Infrastructure (managed by Terraform)

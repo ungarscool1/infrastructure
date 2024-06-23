@@ -1,0 +1,20 @@
+applications:
+  root:
+    namespace: argocd
+    additionalLabels: {}
+    additionalAnnotations: {}
+    finalizers:
+    - resources-finalizer.argocd.argoproj.io
+    project: default
+    source:
+      repoURL: https://github.com/ungarscool1/infrastructure.git
+      targetRevision: HEAD
+      path: apps/root
+    destination:
+      server: https://kubernetes.default.svc
+      namespace: argocd
+    syncPolicy:
+      automated:
+        selfHeal: true
+      syncOptions:
+      - CreateNamespace=true

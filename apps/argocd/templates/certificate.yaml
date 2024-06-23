@@ -1,0 +1,13 @@
+apiVersion: cert-manager.io/v1
+kind: Certificate
+metadata:
+  name: certificate-argocd
+  namespace: argocd
+spec:
+  secretName: certificate-argocd-secret
+  dnsNames:
+  - {{ index .Values "argo-cd" "global" "domain" | quote }}
+  issuerRef:
+    name: letsencrypt-prod
+    kind: ClusterIssuer
+    group: cert-manager.io
