@@ -1,0 +1,28 @@
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+  name: cert-manager
+  namespace: argocd
+  finalizers:
+  - resources-finalizer.argocd.argoproj.io
+spec:
+  destination:
+    namespace: argocd
+    server: https://kubernetes.default.svc
+  project: default
+  source:
+    path: deploy/charts/cert-manager
+    repoURL: https://github.com/cert-manager/cert-manager.git
+    targetRevision: v1.15.0
+    parameters:
+    - name: crds.enabled
+      value: "true"
+    - name: crds.keep
+      value: "true"
+    - name: prometheus.enabled
+      value: "false"
+  syncPolicy:
+        automated:
+          selfHeal: true
+        syncOptions:
+        - CreateNamespace=true
