@@ -14,8 +14,8 @@ spec:
     path: apps/root
     repoURL: https://github.com/ungarscool1/infrastructure.git
     targetRevision: HEAD
-  syncPolicy: 
+  syncPolicy:
         automated:
-          selfHeal: true    
+          selfHeal: true
         syncOptions:
         - CreateNamespace=true
