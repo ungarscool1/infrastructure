@@ -6,7 +6,7 @@ metadata:
 spec:
   project: default
   sources:
-    - path: apps/longhorn
+    - path: apps/longhorn/longhorn
       repoURL: https://github.com/ungarscool1/infrastructure.git
       targetRevision: setup-longhorn
   destination:
@@ -21,7 +21,7 @@ metadata:
 spec:
   project: default
   sources:
-    - path: apps/longhorn-config
+    - path: apps/longhorn/longhorn-config
       repoURL: https://github.com/ungarscool1/infrastructure.git
       targetRevision: setup-longhorn
   destination:
