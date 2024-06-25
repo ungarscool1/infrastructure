@@ -1,0 +1,4 @@
+apiVersion: v2
+name: longhorn-config
+description: longhorn configuration helm chart
+version: 1.0.0
