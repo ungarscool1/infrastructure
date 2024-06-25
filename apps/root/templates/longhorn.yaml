@@ -8,7 +8,7 @@ spec:
   sources:
     - path: apps/longhorn/longhorn
       repoURL: https://github.com/ungarscool1/infrastructure.git
-      targetRevision: setup-longhorn
+      targetRevision: HEAD
   destination:
     server: https://kubernetes.default.svc
     namespace: longhorn-system
@@ -23,7 +23,7 @@ spec:
   sources:
     - path: apps/longhorn/longhorn-config
       repoURL: https://github.com/ungarscool1/infrastructure.git
-      targetRevision: setup-longhorn
+      targetRevision: HEAD
   destination:
     server: https://kubernetes.default.svc
     namespace: longhorn-system
