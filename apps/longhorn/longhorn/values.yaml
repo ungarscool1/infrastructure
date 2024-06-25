@@ -1,0 +1,20 @@
+longhorn:
+  defaultSettings:
+    allowCollectingLonghornUsageMetrics: false
+    backupTarget: "s3://longhorn-backup@eu-south-1/longhorn"
+    backupTargetCredentialSecret: "s3-secret"
+  persistence:
+    defaultClass: true
+    migratable: true
+  preUpgradeChecker:
+    jobEnabled: false
+  ingress:
+    enabled: true
+    host: longhorn.apps.legodard.fr
+    tls: true
+    secureBackends: false
+    tlsSecret: longhorn.local-tls
+    path: /
+    annotations:
+      cert-manager.io/cluster-issuer: "letsencrypt-prod"
+      kubernetes.io/tls-acme: true
