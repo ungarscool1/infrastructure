@@ -1,0 +1,40 @@
+cloudflare-tunnel-ingress-controller:
+  cloudflare:
+    secretRef:
+      name: cf-secret
+      accountIDKey: ACCOUNT_ID
+      tunnelNameKey: Kubernetes
+      apiTokenKey: API_TOKEN
+  
+  ingressClass:
+    name: cloudflare-tunnel
+    controllerValue: strrl.dev/cloudflare-tunnel-ingress-controller
+    isDefaultClass: false
+  replicaCount: 1
+  
+  podSecurityContext:
+    fsGroup: 2000
+  
+  securityContext:
+    capabilities:
+      drop:
+      - ALL
+    readOnlyRootFilesystem: true
+    runAsNonRoot: true
+    runAsUser: 1000
+  
+  resources:
+    limits:
+      cpu: 100m
+      memory: 128Mi
+    requests:
+      cpu: 100m
+      memory: 128Mi
+  nodeSelector: {}
+  cloudflared:
+    image:
+      repository: cloudflare/cloudflared
+      pullPolicy: IfNotPresent
+      tag: latest
+    replicaCount: 1
+  

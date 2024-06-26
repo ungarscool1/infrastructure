@@ -1,0 +1,9 @@
+apiVersion: v2
+name: cf-tunnel
+description: cf-tunnel installation helm chart
+version: 1.0.0
+
+dependencies:
+  - name: cloudflare-tunnel-ingress-controller
+    version: 0.0.11
+    repository: https://helm.strrl.dev
