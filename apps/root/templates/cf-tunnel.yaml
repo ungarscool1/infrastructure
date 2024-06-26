@@ -1,0 +1,21 @@
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+  name: cf-tunnel
+  namespace: argocd
+spec:
+  project: default
+  sources:
+    - path: apps/cf-tunnel
+      repoURL: https://github.com/ungarscool1/infrastructure.git
+      targetRevision: HEAD
+  destination:
+    server: https://kubernetes.default.svc
+    namespace: cloudflare-tunnel-ingress-controller
+  syncPolicy:
+    automated:
+      prune: true
+      selfHeal: true
+    syncOptions:
+    - CreateNamespace=true
+    - Prune=true
