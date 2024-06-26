@@ -3,7 +3,7 @@ cloudflare-tunnel-ingress-controller:
     secretRef:
       name: cf-secret
       accountIDKey: ACCOUNT_ID
-      tunnelNameKey: Kubernetes
+      tunnelNameKey: TUNNEL_NAME
       apiTokenKey: API_TOKEN
   
   ingressClass:
