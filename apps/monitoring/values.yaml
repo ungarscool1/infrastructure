@@ -1,0 +1,19 @@
+influxdb:
+  image:
+    tag: 2.7-alpine
+    pullPolicy: IfNotPresent
+  data:
+    storage: 50Gi
+  conf:
+    storage: 10Mi
+
+grafana:
+  image:
+    tag: latest
+    pullPolicy: IfNotPresent
+  persistence:
+    enabled: true
+    storageClassName: ""
+    accessModes:
+      - ReadWriteOnce
+    size: 10Gi
