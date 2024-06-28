@@ -9,8 +9,9 @@ function check_version() {
     current_version=$(ssh -o StrictHostKeyChecking=no -t ubuntu@$1 "k3s --version | cut -d ' ' -f 3 | head -n 1 | tr -d '\n'")
     if [ "$current_version" = "$latest_version" ]; then
         echo "true"
+    else
+        echo "false"
     fi
-    echo "false"
 }
 
 ## Function to upgrade k3s on given nodes
