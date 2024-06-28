@@ -3,6 +3,7 @@ kind: Ingress
 metadata:
   name: grafana
 spec:
+  ingressClassName: cloudflare-tunnel
   rules:
   - host: monitoring-v2.legodard.fr
     http:

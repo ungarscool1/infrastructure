@@ -3,6 +3,7 @@ kind: Ingress
 metadata:
   name: influxdb
 spec:
+  ingressClassName: cloudflare-tunnel
   rules:
   - host: influxdb-v2.legodard.fr
     http:
