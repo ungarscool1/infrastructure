@@ -9,16 +9,13 @@ GitOps infrastructure repository for my homelab.
 
 ## Upgrade K3s
 
-Run this on each k3s node:
+> [!WARNING]
+> You must use ubuntu as user to run this script.
+
+Run this on a bootstrap/your own machine:
 
 ```bash
 wget https://raw.githubusercontent.com/ungarscool1/infrastructure/main/scripts/upgrade_k3s.sh
 chmod +x upgrade_k3s.sh
-sudo ./upgrade_k3s.sh # sudo to be sure it has the right permissions
-```
-
-After the first upgrade, it will be possible to just run:
-
-```bash
-ssh <user>@<node> 'sudo ./upgrade_k3s.sh'
+./upgrade_k3s.sh
 ```
