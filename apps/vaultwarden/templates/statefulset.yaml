@@ -24,10 +24,7 @@ spec:
           mountPath: /var/lib/postgresql/data
         env:
         - name: POSTGRES_DB
-          valueFrom:
-            secretKeyRef:
-              name: vaultwarden-secret
-              key: POSTGRES_DB
+          value: vaultwarden
         - name: POSTGRES_PASSWORD
           valueFrom:
             secretKeyRef:
