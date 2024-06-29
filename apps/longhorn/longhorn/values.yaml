@@ -6,6 +6,7 @@ longhorn:
   persistence:
     defaultClass: true
     migratable: true
+    defaultFsType: xfs
   preUpgradeChecker:
     jobEnabled: false
   ingress:
