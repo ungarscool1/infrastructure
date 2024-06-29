@@ -10,7 +10,8 @@ resource "helm_release" "vault_agent" {
 resource "kubectl_manifest" "secret" {
   depends_on = [
     helm_release.vault_agent,
-    hcp_service_principal_key.self
+    hcp_service_principal_key.self,
+    helm_release.cluster_secret
   ]
   yaml_body = templatefile("./manifests/vault-auth-secret.yaml", {
     clientId : base64encode(hcp_service_principal_key.self.client_id),
@@ -21,7 +22,6 @@ resource "kubectl_manifest" "secret" {
 
 resource "kubectl_manifest" "authentication" {
   depends_on = [
-    helm_release.vault_agent,
     kubectl_manifest.secret
   ]
   yaml_body = templatefile("./manifests/vault-auth.yaml", {
