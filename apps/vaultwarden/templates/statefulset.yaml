@@ -1,0 +1,94 @@
+apiVersion: apps/v1
+kind: StatefulSet
+metadata:
+  name: postgresql
+spec:
+  serviceName: postgresql
+  replicas: 1
+  selector:
+    matchLabels:
+      app: postgresql
+  template:
+    metadata:
+      labels:
+        app: postgresql
+    spec:
+      containers:
+      - name: postgresql
+        image: postgres:14
+        ports:
+        - containerPort: 5432
+          name: postgres
+        volumeMounts:
+        - name: pgdata
+          mountPath: /var/lib/postgresql/data
+        envFrom:
+          - secretRef:
+             name: db-secret
+  volumeClaimTemplates:
+  - metadata:
+      name: pgdata
+    spec:
+      accessModes: [ "ReadWriteOnce" ]
+      resources:
+        requests:
+          storage: 200Mi
+---
+apiVersion: apps/v1
+kind: StatefulSet
+metadata:
+  name: vaultwarden
+spec:
+  serviceName: vaultwarden
+  replicas: 1
+  selector:
+    matchLabels:
+      app: vaultwarden
+  template:
+    metadata:
+      labels:
+        app: vaultwarden
+    spec:
+      containers:
+      - name: vaultwarden
+        image: {{ .Values.vaultwarden.image.repository }}:{{ .Values.vaultwarden.image.tag }}
+        imagePullPolicy: {{ .Values.vaultwarden.image.pullPolicy }}
+        ports:
+        - containerPort: 80
+          name: http
+        volumeMounts:
+        - name: data
+          mountPath: /data
+        env:
+        - name: DATABASE_URL
+          valueFrom:
+            secretKeyRef:
+              name: vaultwarden-secret
+              key: DATABASE_URL
+        - name: DOMAIN
+          value: {{ .Values.vaultwarden.ingress.host }}
+        - name: PUSH_ENABLED
+          value: {{ .Values.vaultwarden.push.enabled }}
+        - name: PUSH_INSTALLATION_ID
+          valueFrom:
+            secretKeyRef:
+              name: vaultwarden-secret
+              key: PUSH_INSTALLATION_ID
+        - name: PUSH_INSTALLATION_KEY
+          valueFrom:
+            secretKeyRef:
+              name: vaultwarden-secret
+              key: PUSH_INSTALLATION_KEY
+        - name: SHOW_PASSWORD_HINT
+          value: {{ .Values.vaultwarden.showPasswordHint }}
+        - name: SIGNUPS_ALLOWED
+          value: {{ .Values.vaultwarden.signupsAllowed }}
+  volumeClaimTemplates:
+  - metadata:
+      name: data
+    spec:
+      accessModes: [ "ReadWriteOnce" ]
+      storageClassName: longhorn
+      resources:
+        requests:
+          storage: 50Mi

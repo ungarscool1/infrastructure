@@ -1,0 +1,11 @@
+vaultwarden:
+  showPasswordHint: false
+  signupsAllowed: false
+  image:
+    repository: docker.io/vaultwarden/server
+    tag: latest
+    pullPolicy: IfNotPresent
+  ingress:
+    host: vaultwarden-v2.legodard.fr
+  push:
+    enabled: true
