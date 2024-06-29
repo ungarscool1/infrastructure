@@ -31,10 +31,7 @@ spec:
               name: vaultwarden-secret
               key: POSTGRES_PASSWORD
         - name: POSTGRES_USER
-          valueFrom:
-            secretKeyRef:
-              name: vaultwarden-secret
-              key: POSTGRES_DB
+          value: vaultwarden
   volumeClaimTemplates:
   - metadata:
       name: pgdata
