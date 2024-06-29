@@ -22,9 +22,22 @@ spec:
         volumeMounts:
         - name: pgdata
           mountPath: /var/lib/postgresql/data
-        envFrom:
-          - secretRef:
-             name: db-secret
+        env:
+        - name: POSTGRES_DB
+          valueFrom:
+            secretKeyRef:
+              name: vaultwarden-secret
+              key: POSTGRES_DB
+        - name: POSTGRES_PASSWORD
+          valueFrom:
+            secretKeyRef:
+              name: vaultwarden-secret
+              key: POSTGRES_PASSWORD
+        - name: POSTGRES_USER
+          valueFrom:
+            secretKeyRef:
+              name: vaultwarden-secret
+              key: POSTGRES_DB
   volumeClaimTemplates:
   - metadata:
       name: pgdata
