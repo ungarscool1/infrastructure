@@ -75,7 +75,7 @@ spec:
         - name: DOMAIN
           value: {{ .Values.vaultwarden.ingress.host }}
         - name: PUSH_ENABLED
-          value: {{ .Values.vaultwarden.push.enabled }}
+          value: "{{ .Values.vaultwarden.push.enabled }}"
         - name: PUSH_INSTALLATION_ID
           valueFrom:
             secretKeyRef:
@@ -87,9 +87,9 @@ spec:
               name: vaultwarden-secret
               key: PUSH_INSTALLATION_KEY
         - name: SHOW_PASSWORD_HINT
-          value: {{ .Values.vaultwarden.showPasswordHint }}
+          value: "{{ .Values.vaultwarden.showPasswordHint }}"
         - name: SIGNUPS_ALLOWED
-          value: {{ .Values.vaultwarden.signupsAllowed }}
+          value: "{{ .Values.vaultwarden.signupsAllowed }}"
   volumeClaimTemplates:
   - metadata:
       name: data
