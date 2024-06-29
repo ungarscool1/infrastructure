@@ -8,7 +8,9 @@ spec:
   - host: monitoring-v2.legodard.fr
     http:
       paths:
-      - backend:
+      - path: /*
+        pathType: Prefix
+        backend:
           service:
             name: grafana
             port:

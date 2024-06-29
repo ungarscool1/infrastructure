@@ -8,7 +8,9 @@ spec:
   - host: influxdb-v2.legodard.fr
     http:
       paths:
-      - backend:
+      - path: /*
+        pathType: Prefix
+        backend:
           service:
             name: influxdb
             port:
