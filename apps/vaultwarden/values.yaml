@@ -6,6 +6,6 @@ vaultwarden:
     tag: latest
     pullPolicy: IfNotPresent
   ingress:
-    host: vaultwarden-v2.legodard.fr
+    host: vaultwarden.apps.legodard.fr
   push:
     enabled: true
