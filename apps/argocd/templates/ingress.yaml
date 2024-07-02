@@ -4,6 +4,7 @@ metadata:
   name: argocd-server
   namespace: argocd
   annotations:
+    traefik.ingress.kubernetes.io/router.middlewares: default-allow-local-only@kubernetescrd
     cert-manager.io/cluster-issuer: "letsencrypt-prod"
     kubernetes.io/tls-acme: "true"
 spec:
