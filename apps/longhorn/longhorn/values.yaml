@@ -19,3 +19,4 @@ longhorn:
     annotations:
       cert-manager.io/cluster-issuer: "letsencrypt-prod"
       kubernetes.io/tls-acme: true
+      traefik.ingress.kubernetes.io/router.middlewares: default-allow-local-only@kubernetescrd,default-http2https@kubernetescrd
