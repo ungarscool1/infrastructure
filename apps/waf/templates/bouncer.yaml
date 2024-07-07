@@ -10,7 +10,7 @@ spec:
       updateIntervalSeconds: 300
       crowdsecLapiHost: crowdsec-service.{{ .Release.Namespace }}.svc.cluster.local:8080
       crowdsecLapiScheme: http
-      crowdsecLapiKeyFile: /etc/crowdsec/api.key
+      crowdsecLapiKeyFile: /etc/crowdsec
       httpTimeoutSeconds: 30
       clientTrustedIPs:
         {{- range .Values.ipWhitelist }}
