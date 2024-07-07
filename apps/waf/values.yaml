@@ -39,7 +39,5 @@ crowdsec:
     persistentVolume:
       data:
         enabled: true
-        storageClassName: crowdsec-data
       config:
         enabled: true
-        storageClassName: crowdsec-config
