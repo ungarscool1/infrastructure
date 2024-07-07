@@ -23,10 +23,10 @@ spec:
           secretName: crt-secret
     nodeSelector:
       kubernetes.io/hostname: cloud.legodard.fr
+    experimental:
+      plugins:
+        enabled: true
     # To uncomment when K3s will upgrade the chart to v26.0.0
-    #experimental:
-    #  plugins:
-    #    enabled: true
     #    crowdsec-bouncer-traefik-plugin:
     #      moduleName: "github.com/maxlerebourg/crowdsec-bouncer-traefik-plugin"
     #      version: "v1.3.2"
