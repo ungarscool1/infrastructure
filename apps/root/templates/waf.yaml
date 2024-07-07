@@ -1,0 +1,17 @@
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+  name: waf
+  namespace: argocd
+  finalizers:
+  - resources-finalizer.argocd.argoproj.io
+spec:
+  destination:
+    namespace: waf
+    server: https://kubernetes.default.svc
+  project: default
+  source:
+    path: apps/waf
+    repoURL: https://github.com/ungarscool1/infrastructure.git
+    targetRevision: HEAD
+  syncPolicy: {}
