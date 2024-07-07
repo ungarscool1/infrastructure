@@ -4,7 +4,4 @@ metadata:
   name: ip-whitelist
 spec:
   ipWhiteList:
-    sourceRange:
-    {{- range .Values.ipWhitelist }}
-    - {{ . }}
-    {{- end }}
+    sourceRange: {{ .Values.ipWhitelist | toYaml | nindent 4 }}
