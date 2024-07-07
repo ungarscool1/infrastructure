@@ -26,7 +26,8 @@ spec:
     experimental:
       plugins:
         enabled: true
+        crowdsec-bouncer-traefik-plugin:
+          moduleName: "github.com/maxlerebourg/crowdsec-bouncer-traefik-plugin"
+          version: "v1.3.2"
     additionalArguments:
     - "--entrypoints.web.http.middlewares={{ .Release.Namespace }}-redirect2https@kubernetescrd"
-    - "--experimental.plugins.crowdsec-bouncer-traefik-plugin.modulename=github.com/maxlerebourg/crowdsec-bouncer-traefik-plugin"
-    - "--experimental.plugins.crowdsec-bouncer-traefik-plugin.version=v1.3.2"
