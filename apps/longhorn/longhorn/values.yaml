@@ -12,11 +12,8 @@ longhorn:
   ingress:
     enabled: true
     host: longhorn.apps.legodard.fr
-    tls: true
+    tls: false
     secureBackends: false
-    tlsSecret: longhorn.local-tls
     path: /
     annotations:
-      cert-manager.io/cluster-issuer: "letsencrypt-prod"
-      kubernetes.io/tls-acme: true
-      traefik.ingress.kubernetes.io/router.middlewares: default-allow-local-only@kubernetescrd,default-http2https@kubernetescrd
+      traefik.ingress.kubernetes.io/router.middlewares: waf-ip-whitelist@kubernetescrd,waf-redirect2https@kubernetescrd
