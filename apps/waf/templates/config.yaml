@@ -17,14 +17,6 @@ spec:
     experimental:
       plugins:
         enabled: true
-    additionalVolumes:
-    - name: crowdsec-auth-secret
-      secret:
-        secretName: crowdsec-lapi-secrets
-        optional: true
-    additionalVolumeMounts:
-    - name: crowdsec-auth-secret
-      mountPath: /etc/crowdsec
     additionalArguments:
     - "--entrypoints.web.http.middlewares={{ .Release.Namespace }}-redirect2https@kubernetescrd"
     - "--experimental.plugins.crowdsec-bouncer-traefik-plugin.modulename=github.com/maxlerebourg/crowdsec-bouncer-traefik-plugin"
