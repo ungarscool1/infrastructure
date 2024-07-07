@@ -28,7 +28,7 @@ crowdsec:
       - name: TZ
         value: "Europe/Paris"
       - name: ENROLL_KEY
-        envFrom:
+        valueFrom:
           secretKeyRef:
             name: crowdsec-auth-secret
             key: ENROLL_KEY
