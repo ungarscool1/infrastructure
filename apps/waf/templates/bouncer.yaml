@@ -6,9 +6,9 @@ spec:
   plugin:
     crowdsec-bouncer-traefik-plugin:
       enabled: "true"
-      crowdsecMode: live
+      crowdsecMode: stream
       updateIntervalSeconds: 300
-      logLevel: DEBUG
+      logLevel: INFO
       crowdsecLapiHost: {{.Release.Name}}-service.{{.Release.Namespace}}.svc.cluster.local:8080
       crowdsecLapiScheme: http
       crowdsecLapiKeyFile: /etc/crowdsec/csLapiSecret
