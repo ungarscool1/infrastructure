@@ -32,6 +32,5 @@ spec:
     #      version: "v1.3.2"
     additionalArguments:
     - "--entrypoints.web.http.middlewares={{ .Release.Namespace }}-redirect2https@kubernetescrd"
-    - "--experimental.plugins.enabled=true"
     - "--experimental.plugins.crowdsec-bouncer-traefik-plugin.modulename=github.com/maxlerebourg/crowdsec-bouncer-traefik-plugin"
     - "--experimental.plugins.crowdsec-bouncer-traefik-plugin.version=v1.3.2"
