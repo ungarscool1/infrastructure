@@ -5,6 +5,15 @@ metadata:
   namespace: kube-system
 spec:
   valuesContent: |-
+    deployment:
+      additionalVolumes:
+      - name: crowdsec-secret-volume
+        secret:
+          secretName: crowdsec-lapi-secrets
+      additionalVolumeMounts:
+      - name: crowdsec-secret-volume
+        mountPath: /etc/crowdsec
+        readOnly: true
     service:
       spec:
         externalTrafficPolicy: Local
