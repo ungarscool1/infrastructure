@@ -12,6 +12,8 @@ spec:
       default:
         defaultCertificate:
           secretName: crt-secret
+    nodeSelector:
+      kubernetes.io/hostname: cloud.legodard.fr
     experimental:
       plugins:
         enabled: true
