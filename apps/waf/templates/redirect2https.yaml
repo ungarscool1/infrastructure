@@ -1,8 +1,7 @@
 apiVersion: traefik.containo.us/v1alpha1
 kind: Middleware
 metadata:
-  name: http2https
-  namespace: default
+  name: redirect2https
 spec:
   redirectScheme:
     scheme: https

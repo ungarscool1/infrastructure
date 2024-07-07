@@ -1,0 +1,18 @@
+apiVersion: traefik.containo.us/v1alpha1
+kind: Middleware
+metadata:
+  name: crowdsec-bouncer-traefik-plugin
+spec:
+  plugin:
+    crowdsec-bouncer-traefik-plugin:
+      enabled: "true"
+      crowdsecMode: live
+      updateIntervalSeconds: 300
+      crowdsecLapiHost: crowdsec-service.{{ .Release.Namespace }}.svc.cluster.local:8080
+      crowdsecLapiScheme: http
+      crowdsecLapiKeyFile: /etc/crowdsec/api.key
+      httpTimeoutSeconds: 30
+      clientTrustedIPs:
+        {{- range .Values.ipWhitelist }}
+        - {{ . }}
+        {{- end }}
