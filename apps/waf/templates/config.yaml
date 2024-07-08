@@ -1,0 +1,36 @@
+apiVersion: helm.cattle.io/v1
+kind: HelmChartConfig
+metadata:
+  name: traefik
+  namespace: kube-system
+spec:
+  valuesContent: |-
+    deployment:
+      additionalVolumes:
+      - name: crowdsec-secret-volume
+        secret:
+          secretName: crowdsec-lapi-secrets
+    additionalVolumeMounts:
+    - name: crowdsec-secret-volume
+      mountPath: /etc/crowdsec
+      readOnly: true
+    service:
+      spec:
+        externalTrafficPolicy: Local
+    tlsStore:
+      default:
+        defaultCertificate:
+          secretName: crt-secret
+    nodeSelector:
+      kubernetes.io/hostname: cloud.legodard.fr
+    experimental:
+      plugins:
+        enabled: true
+    # To uncomment when K3s will upgrade the chart to v26.0.0
+    #    crowdsec-bouncer-traefik-plugin:
+    #      moduleName: "github.com/maxlerebourg/crowdsec-bouncer-traefik-plugin"
+    #      version: "v1.3.2"
+    additionalArguments:
+    - "--entrypoints.web.http.middlewares={{ .Release.Namespace }}-redirect2https@kubernetescrd"
+    - "--experimental.plugins.crowdsec-bouncer-traefik-plugin.modulename=github.com/maxlerebourg/crowdsec-bouncer-traefik-plugin"
+    - "--experimental.plugins.crowdsec-bouncer-traefik-plugin.version=v1.3.2"

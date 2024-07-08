@@ -1,0 +1,12 @@
+apiVersion: v2
+name: waf
+description: |
+  Helm chart for Traefik WAF.
+  The Traefik deployment is done by K3s, this chart modify the Traefik deployment to change default settings.
+type: application
+version: 1.0.0
+appVersion: "1.0.0"
+dependencies:
+  - name: crowdsec
+    version: 0.11.0
+    repository: https://crowdsecurity.github.io/helm-charts
