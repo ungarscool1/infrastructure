@@ -4,14 +4,8 @@ metadata:
   name: argocd-server
   namespace: argocd
   annotations:
-    traefik.ingress.kubernetes.io/router.middlewares: default-allow-local-only@kubernetescrd,default-http2https@kubernetescrd
-    cert-manager.io/cluster-issuer: "letsencrypt-prod"
-    kubernetes.io/tls-acme: "true"
+    traefik.ingress.kubernetes.io/router.middlewares: waf-ip-whitelist@kubernetescrd,waf-redirect2https@kubernetescrd
 spec:
-  tls:
-    - hosts:
-        - {{ index .Values "argo-cd" "global" "domain" | quote }}
-      secretName: certificate-argocd-secret
   rules:
     - host: {{ index .Values "argo-cd" "global" "domain" | quote }}
       http:
