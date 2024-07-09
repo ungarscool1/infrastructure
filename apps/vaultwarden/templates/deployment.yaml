@@ -1,9 +1,8 @@
 apiVersion: apps/v1
-kind: StatefulSet
+kind: Deployment
 metadata:
   name: postgresql
 spec:
-  serviceName: postgresql
   replicas: 1
   selector:
     matchLabels:
@@ -18,7 +17,6 @@ spec:
         image: postgres:14
         ports:
         - containerPort: 5432
-          name: postgres
         volumeMounts:
         - name: pgdata
           mountPath: /var/lib/postgresql/data
@@ -32,21 +30,16 @@ spec:
               key: POSTGRES_PASSWORD
         - name: POSTGRES_USER
           value: vaultwarden
-  volumeClaimTemplates:
-  - metadata:
-      name: pgdata
-    spec:
-      accessModes: [ "ReadWriteOnce" ]
-      resources:
-        requests:
-          storage: 200Mi
+      volumes:
+      - name: pgdata
+        persistentVolumeClaim:
+          claimName: pgdata-pvc
 ---
 apiVersion: apps/v1
-kind: StatefulSet
+kind: Deployment
 metadata:
   name: vaultwarden
 spec:
-  serviceName: vaultwarden
   replicas: 1
   selector:
     matchLabels:
@@ -62,7 +55,6 @@ spec:
         imagePullPolicy: {{ .Values.vaultwarden.image.pullPolicy }}
         ports:
         - containerPort: 80
-          name: http
         volumeMounts:
         - name: data
           mountPath: /data
@@ -90,12 +82,7 @@ spec:
           value: "{{ .Values.vaultwarden.showPasswordHint }}"
         - name: SIGNUPS_ALLOWED
           value: "{{ .Values.vaultwarden.signupsAllowed }}"
-  volumeClaimTemplates:
-  - metadata:
-      name: data
-    spec:
-      accessModes: [ "ReadWriteOnce" ]
-      storageClassName: longhorn
-      resources:
-        requests:
-          storage: 50Mi
+      volumes:
+      - name: data
+        persistentVolumeClaim:
+          claimName: data-pvc
