@@ -3,13 +3,8 @@ kind: Ingress
 metadata:
   name: vaultwarden
   annotations:
-    cert-manager.io/cluster-issuer: "letsencrypt-prod"
-    kubernetes.io/tls-acme: "true"
+    traefik.ingress.kubernetes.io/router.middlewares: waf-crowdsec-bouncer-traefik-plugin@kubernetescrd
 spec:
-  tls:
-    - hosts:
-        - {{ .Values.vaultwarden.ingress.host }}
-      secretName: certificate-vaultwarden-secret
   rules:
     - host: {{ .Values.vaultwarden.ingress.host }}
       http:
@@ -21,21 +16,3 @@ spec:
                 name: vaultwarden
                 port:
                   name: http
-
-###apiVersion: networking.k8s.io/v1
-###kind: Ingress
-###metadata:
-###  name: vaultwarden
-###spec:
-###  ingressClassName: cloudflare-tunnel
-###  rules:
-###    - host: {{ .Values.vaultwarden.ingress.host }}
-###      http:
-###        paths:
-###          - backend:
-###              service:
-###                name: vaultwarden
-###                port:
-###                  number: 80
-###            path: /*
-###            pathType: Prefix
