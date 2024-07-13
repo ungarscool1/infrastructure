@@ -78,6 +78,10 @@ spec:
             secretKeyRef:
               name: vaultwarden-secret
               key: PUSH_INSTALLATION_KEY
+        - name: PUSH_RELAY_URI
+          value: "{{ .Values.vaultwarden.push.relayUri }}"
+        - name: PUSH_IDENTITY_URI
+          value: "{{ .Values.vaultwarden.push.identityUri }}"
         - name: SHOW_PASSWORD_HINT
           value: "{{ .Values.vaultwarden.showPasswordHint }}"
         - name: SIGNUPS_ALLOWED

@@ -3,9 +3,11 @@ vaultwarden:
   signupsAllowed: false
   image:
     repository: docker.io/vaultwarden/server
-    tag: latest
+    tag: 1.31.0
     pullPolicy: IfNotPresent
   ingress:
     host: vaultwarden.apps.legodard.fr
   push:
     enabled: true
+    relayUri: https://api.bitwarden.eu
+    identityUri: https://identity.bitwarden.eu
