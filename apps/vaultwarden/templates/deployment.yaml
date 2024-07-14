@@ -44,6 +44,8 @@ spec:
   selector:
     matchLabels:
       app: vaultwarden
+  strategy:
+    type: Recreate
   template:
     metadata:
       labels:
