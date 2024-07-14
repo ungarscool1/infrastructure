@@ -1,0 +1,95 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: outline
+spec:
+  selector:
+    matchLabels:
+      app: outline
+  strategy:
+    type: Recreate
+  template:
+    metadata:
+      labels:
+        app: outline
+    spec:
+      volumes:
+      - name: data
+        persistentVolumeClaim:
+          claimName: outline
+      containers:
+      - name: outline
+        image: outlinewiki/outline:latest
+        command: ["sh", "-c", "yarn sequelize:migrate --env production-ssl-disabled && yarn start"]
+        envFrom:
+        - configMapRef:
+            name: outline
+        - secretRef:
+            name: outline
+        ports:
+        - containerPort: 80
+      livenessProbe:
+        httpGet:
+          path: /
+          port: 80
+        initialDelaySeconds: 3
+        periodSeconds: 3
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: postgres
+spec:
+  strategy:
+    type: Recreate
+  template:
+    metadata:
+      labels:
+        app: postgres
+    spec:
+      volumes:
+      - name: data
+        persistentVolumeClaim:
+          claimName: postgres
+      containers:
+      - name: postgres
+        volumeMounts:
+        - name: data
+          mountPath: "/var/lib/postgresql/data"
+        image: postgres:latest
+        env:
+        - name: POSTGRES_USER
+          valueFrom:
+            secretKeyRef:
+              name: postgres
+              key: POSTGRES_USER
+        - name: POSTGRES_PASSWORD
+          valueFrom:
+            secretKeyRef:
+              name: postgres
+              key: POSTGRES_PASSWORD
+        - name: POSTGRES_DB
+          valueFrom:
+            secretKeyRef:
+              name: postgres
+              key: POSTGRES_USER
+        ports:
+        - containerPort: 5432
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: redis
+spec:
+  strategy:
+    type: Recreate
+  template:
+    metadata:
+      labels:
+        app: redis
+    spec:
+      containers:
+      - name: redis
+        image: redis:latest
+        ports:
+        - containerPort: 6379
