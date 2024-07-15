@@ -6,16 +6,14 @@ data:
   NODE_ENV: {{ .Values.outline.configuration.env | default "production" }}
   SECRET_KEY: {{ include "jupyterhub.randHex" 32 | quote }}
   UTILS_SECRET: {{ include "jupyterhub.randHex" 32 | quote }}
-  DATABASE_CONNECTION_POOL_MIN: 
-  DATABASE_CONNECTION_POOL_MAX: 
   REDIS_URL: {{ printf "redis://redis.%s.svc.cluster.local:6379" .Release.Namespace | quote }}
   URL: {{ printf "https://%s" .Values.outline.url | quote }}
   PORT: 3000
   COLLABORATION_URL: {{ .Values.outline.configuration.collaboration_url | default "" | quote }}
   FILE_STORAGE: {{ .Values.outline.storage.backend }}
   FILE_STORAGE_UPLOAD_MAX_SIZE: 262144000
-  FILE_STORAGE_IMPORT_MAX_SIZE: 
-  FILE_STORAGE_WORKSPACE_IMPORT_MAX_SIZE: 
+  FILE_STORAGE_IMPORT_MAX_SIZE: 262144000
+  FILE_STORAGE_WORKSPACE_IMPORT_MAX_SIZE: 262144000
   {{- if eq .Values.outline.storage.backend "local" }}
   FILE_STORAGE_LOCAL_ROOT_DIR: /var/lib/outline/data
   {{- end }}
