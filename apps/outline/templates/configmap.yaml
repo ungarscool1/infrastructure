@@ -4,8 +4,8 @@ metadata:
   name: outline
 data:
   NODE_ENV: {{ .Values.outline.configuration.env | default "production" }}
-  SECRET_KEY: {{ include "jupyterhub.randHex" 32 | quote }}
-  UTILS_SECRET: {{ include "jupyterhub.randHex" 32 | quote }}
+  SECRET_KEY: {{ include "jupyterhub.randHex" 64 | quote }}
+  UTILS_SECRET: {{ include "jupyterhub.randHex" 64 | quote }}
   REDIS_URL: {{ printf "redis://redis.%s.svc.cluster.local:6379" .Release.Namespace | quote }}
   URL: {{ printf "https://%s" .Values.outline.url | quote }}
   PORT: "3000"

@@ -37,6 +37,8 @@ spec:
             secretKeyRef:
               name: outline
               key: DATABASE_URL
+        - name: PGSSLMODE
+          value: disable
         ports:
         - containerPort: 3000
         {{- if eq .Values.outline.storage.backend "local" }}
