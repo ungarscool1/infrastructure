@@ -17,13 +17,13 @@ data:
   {{- if eq .Values.outline.storage.backend "local" }}
   FILE_STORAGE_LOCAL_ROOT_DIR: /var/lib/outline/data
   {{- end }}
-  FORCE_HTTPS: true
-  ENABLE_UPDATES: false
+  FORCE_HTTPS: "true"
+  ENABLE_UPDATES: "false"
   WEB_CONCURRENCY: {{ .Values.outline.configuration.web_concurrency | default "1" }}
   DEBUG: {{ .Values.outline.configuration.debug | default "http" }}
   LOG_LEVEL: {{ .Values.outline.configuration.log_level | default "info" }}
   DEFAULT_LANGUAGE: {{ .Values.outline.configuration.default_language | default "en_US" }}
-  RATE_LIMITER_ENABLED: {{ .Values.outline.configuration.rate_limiter_enabled | default "true" }}
+  RATE_LIMITER_ENABLED: {{ .Values.outline.configuration.rate_limiter_enabled | default "true" | quote }}
   RATE_LIMITER_REQUESTS: {{ .Values.outline.configuration.rate_limiter_requests | default "100"}}
   RATE_LIMITER_DURATION_WINDOW: {{ .Values.outline.configuration.rate_limiter_duration_window | default "60" }}
   OIDC_SCOPES: {{ .Values.outline.configuration.oidc.scopes | default "openid profile email" }}
@@ -31,5 +31,5 @@ data:
   OIDC_USERNAME_CLAIM: {{ .Values.outline.configuration.oidc.username_claim | default "preferred_username" }}
   AWS_REGION: {{ .Values.outline.storage.s3.region | default "us-east-1" }}
   AWS_S3_UPLOAD_BUCKET_NAME: {{ .Values.outline.storage.s3.bucket_name }}
-  AWS_S3_FORCE_PATH_STYLE: {{ .Values.outline.storage.s3.force_path_style | default "true" }}
+  AWS_S3_FORCE_PATH_STYLE: {{ .Values.outline.storage.s3.force_path_style | default "true" | quote }}
   AWS_S3_ACL: {{ .Values.outline.storage.s3.acl | default "private" }}
