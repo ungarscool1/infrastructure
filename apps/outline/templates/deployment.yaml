@@ -26,6 +26,8 @@ spec:
         envFrom:
         - configMapRef:
             name: outline
+        - secretRef:
+            name: oidc
         env:
         - name: DATABASE_URL
           valueFrom:
