@@ -4,12 +4,30 @@ outline:
     tag: 0.77.2
     pullPolicy: IfNotPresent
   url: https://docs.legodard.fr
-  env: production
   storage:
     backend: s3
     volume:
       name: outline
       size: 1Gi
+    s3:
+      acl: private
+      force_path_style: true
+      bucket_name: outline
+      region: eu-south-1
+  configuration:
+    env: production
+    collaboration_url:
+    web_concurrency: 1
+    debug: http
+    log_level: info
+    default_language: en_US
+    rate_limiter_enabled: true
+    rate_limiter_requests: 100
+    rate_limiter_duration_window: 60
+    oidc:
+      scopes: openid profile email
+      display_name: UAS
+      username_claim: preferred_username
 postgres:
   storage: 500Mi
   image:
