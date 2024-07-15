@@ -78,7 +78,7 @@ spec:
           valueFrom:
             secretKeyRef:
               name: outline
-              key: POSTGRES_USER
+              key: POSTGRES_USERNAME
         - name: POSTGRES_PASSWORD
           valueFrom:
             secretKeyRef:
@@ -88,7 +88,7 @@ spec:
           valueFrom:
             secretKeyRef:
               name: outline
-              key: POSTGRES_USER
+              key: POSTGRES_USERNAME
         ports:
         - containerPort: 5432
 ---
