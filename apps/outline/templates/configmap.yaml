@@ -9,7 +9,7 @@ data:
   DATABASE_CONNECTION_POOL_MIN=
   DATABASE_CONNECTION_POOL_MAX=
   REDIS_URL={{ printf "redis://redis.%s.svc.cluster.local:6379" .Release.Namespace | quote }}
-  URL={{ .Values.outline.url | quote }}
+  URL={{ printf "https://%s" .Values.outline.url | quote }}
   PORT=3000
   COLLABORATION_URL={{ .Values.outline.configuration.collaboration_url | default "" | quote }}
   FILE_STORAGE={{ .Values.outline.storage.backend }}
