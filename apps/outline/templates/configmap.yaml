@@ -3,35 +3,35 @@ kind: ConfigMap
 metadata:
   name: outline
 data:
-  NODE_ENV={{ .Values.outline.configuration.env | default "production" }}
-  SECRET_KEY={{ include "jupyterhub.randHex" 32 | quote }}
-  UTILS_SECRET={{ include "jupyterhub.randHex" 32 | quote }}
-  DATABASE_CONNECTION_POOL_MIN=
-  DATABASE_CONNECTION_POOL_MAX=
-  REDIS_URL={{ printf "redis://redis.%s.svc.cluster.local:6379" .Release.Namespace | quote }}
-  URL={{ printf "https://%s" .Values.outline.url | quote }}
-  PORT=3000
-  COLLABORATION_URL={{ .Values.outline.configuration.collaboration_url | default "" | quote }}
-  FILE_STORAGE={{ .Values.outline.storage.backend }}
-  FILE_STORAGE_UPLOAD_MAX_SIZE=262144000
-  FILE_STORAGE_IMPORT_MAX_SIZE=
-  FILE_STORAGE_WORKSPACE_IMPORT_MAX_SIZE=
+  NODE_ENV: {{ .Values.outline.configuration.env | default "production" }}
+  SECRET_KEY: {{ include "jupyterhub.randHex" 32 | quote }}
+  UTILS_SECRET: {{ include "jupyterhub.randHex" 32 | quote }}
+  DATABASE_CONNECTION_POOL_MIN: 
+  DATABASE_CONNECTION_POOL_MAX: 
+  REDIS_URL: {{ printf "redis://redis.%s.svc.cluster.local:6379" .Release.Namespace | quote }}
+  URL: {{ printf "https://%s" .Values.outline.url | quote }}
+  PORT: 3000
+  COLLABORATION_URL: {{ .Values.outline.configuration.collaboration_url | default "" | quote }}
+  FILE_STORAGE: {{ .Values.outline.storage.backend }}
+  FILE_STORAGE_UPLOAD_MAX_SIZE: 262144000
+  FILE_STORAGE_IMPORT_MAX_SIZE: 
+  FILE_STORAGE_WORKSPACE_IMPORT_MAX_SIZE: 
   {{- if eq .Values.outline.storage.backend "local" }}
-  FILE_STORAGE_LOCAL_ROOT_DIR=/var/lib/outline/data
+  FILE_STORAGE_LOCAL_ROOT_DIR: /var/lib/outline/data
   {{- end }}
-  FORCE_HTTPS=true
-  ENABLE_UPDATES=false
-  WEB_CONCURRENCY={{ .Values.outline.configuration.web_concurrency | default "1" }}
-  DEBUG={{ .Values.outline.configuration.debug | default "http" }}
-  LOG_LEVEL={{ .Values.outline.configuration.log_level | default "info" }}
-  DEFAULT_LANGUAGE={{ .Values.outline.configuration.default_language | default "en_US" }}
-  RATE_LIMITER_ENABLED={{ .Values.outline.configuration.rate_limiter_enabled | default "true" }}
-  RATE_LIMITER_REQUESTS={{ .Values.outline.configuration.rate_limiter_requests | default "100"}}
-  RATE_LIMITER_DURATION_WINDOW={{ .Values.outline.configuration.rate_limiter_duration_window | default "60" }}
-  OIDC_SCOPES={{ .Values.outline.configuration.oidc.scopes | default "openid profile email" }}
-  OIDC_DISPLAY_NAME={{ .Values.outline.configuration.oidc.display_name | default "OIDC" }}
-  OIDC_USERNAME_CLAIM={{ .Values.outline.configuration.oidc.username_claim | default "preferred_username" }}
-  AWS_REGION={{ .Values.outline.storage.s3.region | default "us-east-1" }}
-  AWS_S3_UPLOAD_BUCKET_NAME={{ .Values.outline.storage.s3.bucket_name }}
-  AWS_S3_FORCE_PATH_STYLE={{ .Values.outline.storage.s3.force_path_style | default "true" }}
-  AWS_S3_ACL={{ .Values.outline.storage.s3.acl | default "private" }}
+  FORCE_HTTPS: true
+  ENABLE_UPDATES: false
+  WEB_CONCURRENCY: {{ .Values.outline.configuration.web_concurrency | default "1" }}
+  DEBUG: {{ .Values.outline.configuration.debug | default "http" }}
+  LOG_LEVEL: {{ .Values.outline.configuration.log_level | default "info" }}
+  DEFAULT_LANGUAGE: {{ .Values.outline.configuration.default_language | default "en_US" }}
+  RATE_LIMITER_ENABLED: {{ .Values.outline.configuration.rate_limiter_enabled | default "true" }}
+  RATE_LIMITER_REQUESTS: {{ .Values.outline.configuration.rate_limiter_requests | default "100"}}
+  RATE_LIMITER_DURATION_WINDOW: {{ .Values.outline.configuration.rate_limiter_duration_window | default "60" }}
+  OIDC_SCOPES: {{ .Values.outline.configuration.oidc.scopes | default "openid profile email" }}
+  OIDC_DISPLAY_NAME: {{ .Values.outline.configuration.oidc.display_name | default "OIDC" }}
+  OIDC_USERNAME_CLAIM: {{ .Values.outline.configuration.oidc.username_claim | default "preferred_username" }}
+  AWS_REGION: {{ .Values.outline.storage.s3.region | default "us-east-1" }}
+  AWS_S3_UPLOAD_BUCKET_NAME: {{ .Values.outline.storage.s3.bucket_name }}
+  AWS_S3_FORCE_PATH_STYLE: {{ .Values.outline.storage.s3.force_path_style | default "true" }}
+  AWS_S3_ACL: {{ .Values.outline.storage.s3.acl | default "private" }}
