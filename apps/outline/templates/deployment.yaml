@@ -22,7 +22,6 @@ spec:
       containers:
       - name: outline
         image: {{ .Values.outline.image.repository }}:{{ .Values.outline.image.tag }}
-        command: ["sh", "-c", "yarn sequelize:migrate --env production-ssl-disabled && yarn start"]
         envFrom:
         - configMapRef:
             name: outline
