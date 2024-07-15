@@ -27,12 +27,12 @@ spec:
         - configMapRef:
             name: outline
         - secretRef:
-            name: oidc
+            name: outline
         env:
         - name: DATABASE_URL
           valueFrom:
             secretKeyRef:
-              name: database
+              name: outline
               key: DATABASE_URL
         ports:
         - containerPort: 3000
@@ -77,17 +77,17 @@ spec:
         - name: POSTGRES_USER
           valueFrom:
             secretKeyRef:
-              name: database
+              name: outline
               key: POSTGRES_USER
         - name: POSTGRES_PASSWORD
           valueFrom:
             secretKeyRef:
-              name: database
+              name: outline
               key: POSTGRES_PASSWORD
         - name: POSTGRES_DB
           valueFrom:
             secretKeyRef:
-              name: database
+              name: outline
               key: POSTGRES_USER
         ports:
         - containerPort: 5432
