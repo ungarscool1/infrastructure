@@ -1,0 +1,18 @@
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: outline
+  annotations:
+    traefik.ingress.kubernetes.io/router.middlewares: waf-crowdsec-bouncer-traefik-plugin@kubernetescrd
+spec:
+  rules:
+    - host: {{ .Values.outline.url }}
+      http:
+        paths:
+          - path: /
+            pathType: Prefix
+            backend:
+              service:
+                name: outline
+                port:
+                  number: 3000

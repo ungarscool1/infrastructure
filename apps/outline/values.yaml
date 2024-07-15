@@ -1,2 +1,23 @@
 outline:
-  storage: 10Gi
+  image:
+    repository: outlinewiki/outline
+    tag: 0.77.2
+    pullPolicy: IfNotPresent
+  url: https://docs.legodard.fr
+  env: production
+  storage:
+    backend: s3
+    volume:
+      name: outline
+      size: 1Gi
+postgres:
+  storage: 500Mi
+  image:
+    repository: postgres
+    tag: 14
+    pullPolicy: IfNotPresent
+redis:
+  image:
+    repository: redis
+    tag: 7.2.5-alpine
+    pullPolicy: IfNotPresent

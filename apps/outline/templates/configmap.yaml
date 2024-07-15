@@ -1,0 +1,21 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: outline
+data:
+  NODE_ENV={{ .Values.outline.env }}
+  SECRET_KEY={{ include "jupyterhub.randHex" 32 | quote }}
+  UTILS_SECRET={{ include "jupyterhub.randHex" 32 | quote }}
+  DATABASE_CONNECTION_POOL_MIN=
+  DATABASE_CONNECTION_POOL_MAX=
+  REDIS_URL=redis://redis.{{.Release.Namespace}}.svc.cluster.local:6379
+  URL={{ .Values.outline.url }}
+  PORT=3000
+  COLLABORATION_URL=
+  FILE_STORAGE={{ .Values.outline.storage.backend }}
+  FILE_STORAGE_UPLOAD_MAX_SIZE=262144000
+  FILE_STORAGE_IMPORT_MAX_SIZE=
+  FILE_STORAGE_WORKSPACE_IMPORT_MAX_SIZE=
+  {{- if eq .Values.outline.storage.backend "local" }}
+  FILE_STORAGE_LOCAL_ROOT_DIR=/var/lib/outline/data
+  {{- end }}
