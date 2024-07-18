@@ -23,6 +23,17 @@ spec:
       - name: init-db
         image: busybox:1.28
         command: ['sh', '-c', "until nslookup postgres.{{ .Release.Namespace }}.svc.cluster.local; do echo waiting for postgres; sleep 2; done"]
+      - name: migrate-db
+        image: {{ .Values.outline.image.repository }}:{{ .Values.outline.image.tag }}
+        command: ['yarn', 'db:migrate']
+        envFrom:
+        - configMapRef:
+            name: outline
+        - secretRef:
+            name: outline
+        env:
+        - name: NODE_ENV
+          value: production-ssl-disabled
       containers:
       - name: outline
         image: {{ .Values.outline.image.repository }}:{{ .Values.outline.image.tag }}
@@ -32,11 +43,6 @@ spec:
         - secretRef:
             name: outline
         env:
-        - name: DATABASE_URL
-          valueFrom:
-            secretKeyRef:
-              name: outline
-              key: DATABASE_URL
         - name: PGSSLMODE
           value: disable
         ports:
