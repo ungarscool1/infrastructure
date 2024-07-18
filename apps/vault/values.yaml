@@ -6,7 +6,6 @@ vault:
   global:
     enabled: true
     externalVaultAddr: "vault.apps.legodard.fr"
-  
     # Create PodSecurityPolicy for pods
     psp:
       enable: false
@@ -19,7 +18,6 @@ vault:
         apparmor.security.beta.kubernetes.io/defaultProfileName:  runtime/default
     serverTelemetry:
       prometheusOperator: false
-  
   injector:
     enabled: "-"
     replicas: 1
@@ -66,7 +64,6 @@ vault:
     logLevel: "info"
     logFormat: "standard"
     revokeOnShutdown: false
-  
     webhook:
       failurePolicy: Ignore
       matchPolicy: Exact
@@ -98,7 +95,6 @@ vault:
                 component: webhook
             topologyKey: kubernetes.io/hostname
     nodeSelector: {}
-  
   server:
     enabled: "-"
     image:
@@ -237,7 +233,6 @@ vault:
         pod: {}
         container: {}
     hostNetwork: false
-  
   # Vault UI
   ui:
     enabled: false
