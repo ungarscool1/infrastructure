@@ -5,7 +5,7 @@ init:
 vault:
   global:
     enabled: true
-    externalVaultAddr: "vault.apps.legodard.fr"
+    externalVaultAddr: ""
     # Create PodSecurityPolicy for pods
     psp:
       enable: false
@@ -19,7 +19,7 @@ vault:
     serverTelemetry:
       prometheusOperator: false
   injector:
-    enabled: "-"
+    enabled: true
     replicas: 1
     port: 8080
     leaderElector:
@@ -96,7 +96,7 @@ vault:
             topologyKey: kubernetes.io/hostname
     nodeSelector: {}
   server:
-    enabled: "-"
+    enabled: true
     image:
       repository: "hashicorp/vault"
       tag: "1.17.2"
