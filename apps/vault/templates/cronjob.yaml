@@ -1,0 +1,24 @@
+# Cronjob to unseal the vault using the HCP secret
+apiVersion: batch/v1
+kind: CronJob
+metadata:
+  name: vault-unseal
+spec:
+  schedule: "*/5 * * * *"
+  jobTemplate:
+    spec:
+      template:
+        spec:
+          containers:
+          - name: vault-unseal
+            image: {{ .Values.vault.server.image.repository }}:{{ .Values.vault.server.image.tag }}
+            imagePullPolicy: {{ .Values.vault.server.image.pullPolicy }}
+            command:
+            - sh
+            - -c
+            - >-
+              # Get the unseal key from the secret
+              kubectl get secret vault-unseal-key -o jsonpath='{.data.unseal_key}' | base64 -d > /tmp/unseal_key
+              # Unseal the vault
+              vault operator unseal $(cat /tmp/unseal_key)
+          restartPolicy: OnFailure

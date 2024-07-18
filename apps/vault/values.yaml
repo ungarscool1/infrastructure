@@ -1,0 +1,260 @@
+init:
+  key_shares: 6
+  key_threshold: 3
+
+vault:
+  global:
+    enabled: true
+    externalVaultAddr: "vault.apps.legodard.fr"
+  
+    # Create PodSecurityPolicy for pods
+    psp:
+      enable: false
+      # Annotation for PodSecurityPolicy.
+      # This is a multi-line templated string map, and can also be set as YAML.
+      annotations: |
+        seccomp.security.alpha.kubernetes.io/allowedProfileNames: docker/default,runtime/default
+        apparmor.security.beta.kubernetes.io/allowedProfileNames: runtime/default
+        seccomp.security.alpha.kubernetes.io/defaultProfileName:  runtime/default
+        apparmor.security.beta.kubernetes.io/defaultProfileName:  runtime/default
+    serverTelemetry:
+      prometheusOperator: false
+  
+  injector:
+    enabled: "-"
+    replicas: 1
+    port: 8080
+    leaderElector:
+      enabled: true
+    metrics:
+      enabled: false
+    image:
+      repository: "hashicorp/vault-k8s"
+      tag: "1.4.2"
+      pullPolicy: IfNotPresent
+    agentImage:
+      repository: "hashicorp/vault"
+      tag: "1.17.2"
+    agentDefaults:
+      cpuLimit: "500m"
+      cpuRequest: "250m"
+      memLimit: "128Mi"
+      memRequest: "64Mi"
+      template: "map"
+      templateConfig:
+        exitOnRetryFailure: true
+        staticSecretRenderInterval: ""
+    livenessProbe:
+      failureThreshold: 2
+      initialDelaySeconds: 5
+      periodSeconds: 2
+      successThreshold: 1
+      timeoutSeconds: 5
+    readinessProbe:
+      failureThreshold: 2
+      initialDelaySeconds: 5
+      periodSeconds: 2
+      successThreshold: 1
+      timeoutSeconds: 5
+    startupProbe:
+      failureThreshold: 12
+      initialDelaySeconds: 5
+      periodSeconds: 5
+      successThreshold: 1
+      timeoutSeconds: 5
+    authPath: "auth/kubernetes"
+    logLevel: "info"
+    logFormat: "standard"
+    revokeOnShutdown: false
+  
+    webhook:
+      failurePolicy: Ignore
+      matchPolicy: Exact
+      timeoutSeconds: 30
+      objectSelector: |
+        matchExpressions:
+        - key: app.kubernetes.io/name
+          operator: NotIn
+          values:
+          - {{ template "vault.name" . }}-agent-injector
+      annotations: {}
+    failurePolicy: Ignore
+    resources:
+      requests:
+        memory: 256Mi
+        cpu: 250m
+      limits:
+        memory: 256Mi
+        cpu: 250m
+    extraEnvironmentVars: {}
+      # KUBERNETES_SERVICE_HOST: kubernetes.default.svc
+    affinity: |
+      podAntiAffinity:
+        requiredDuringSchedulingIgnoredDuringExecution:
+          - labelSelector:
+              matchLabels:
+                app.kubernetes.io/name: {{ template "vault.name" . }}-agent-injector
+                app.kubernetes.io/instance: "{{ .Release.Name }}"
+                component: webhook
+            topologyKey: kubernetes.io/hostname
+    nodeSelector: {}
+  
+  server:
+    enabled: "-"
+    image:
+      repository: "hashicorp/vault"
+      tag: "1.17.2"
+      pullPolicy: IfNotPresent
+    updateStrategyType: "OnDelete"
+    logLevel: "info"
+    logFormat: "standard"
+    resources:
+      requests:
+        memory: 256Mi
+        cpu: 250m
+      limits:
+        memory: 256Mi
+        cpu: 250m
+    ingress:
+      enabled: true
+      annotations:
+        traefik.ingress.kubernetes.io/router.middlewares: waf-ip-whitelist@kubernetescrd,waf-redirect2https@kubernetescrd
+      pathType: Prefix
+      activeService: true
+      hosts:
+        - host: "vault.apps.legodard.fr"
+          paths: []
+    authDelegator:
+      enabled: true
+    extraInitContainers: null
+    extraContainers: null
+    shareProcessNamespace: false
+    extraArgs: ""
+    extraPorts: null
+    readinessProbe:
+      enabled: true
+      port: 8200
+      failureThreshold: 2
+      initialDelaySeconds: 5
+      periodSeconds: 5
+      successThreshold: 1
+      timeoutSeconds: 3
+    livenessProbe:
+      enabled: false
+    terminationGracePeriodSeconds: 10
+    preStopSleepSeconds: 5
+    volumes: null
+    volumeMounts: null
+    affinity: |
+      podAntiAffinity:
+        requiredDuringSchedulingIgnoredDuringExecution:
+          - labelSelector:
+              matchLabels:
+                app.kubernetes.io/name: {{ template "vault.name" . }}
+                app.kubernetes.io/instance: "{{ .Release.Name }}"
+                component: server
+            topologyKey: kubernetes.io/hostname
+    nodeSelector: {}
+    networkPolicy:
+      enabled: false
+      egress: []
+      # egress:
+      # - to:
+      #   - ipBlock:
+      #       cidr: 10.0.0.0/24
+      #   ports:
+      #   - protocol: TCP
+      #     port: 443
+      ingress:
+        - from:
+          - namespaceSelector: {}
+          ports:
+          - port: 8200
+            protocol: TCP
+          - port: 8201
+            protocol: TCP
+    priorityClassName: ""
+    extraLabels: {}
+    annotations: {}
+    configAnnotation: false
+    service:
+      enabled: true
+      active:
+        enabled: true
+        annotations: {}
+      standby:
+        enabled: true
+        annotations: {}
+      instanceSelector:
+        enabled: true
+      ipFamilies: []
+      publishNotReadyAddresses: true
+      externalTrafficPolicy: Cluster
+      port: 8200
+      targetPort: 8200
+      annotations: {}
+    dataStorage:
+      enabled: true
+      size: 10Gi
+      mountPath: "/vault/data"
+      storageClass: null
+      accessMode: ReadWriteOnce
+      annotations: {}
+      labels: {}
+    persistentVolumeClaimRetentionPolicy: {}
+    auditStorage:
+      enabled: false
+      # Size of the PVC created
+      size: 10Gi
+      mountPath: "/vault/audit"
+      storageClass: null
+      accessMode: ReadWriteOnce
+      annotations: {}
+      labels: {}
+    dev:
+      enabled: false
+    standalone:
+      enabled: "-"
+      config: |
+        ui = true
+  
+        listener "tcp" {
+          tls_disable = 1
+          address = "[::]:8200"
+          cluster_address = "[::]:8201"
+        }
+        storage "file" {
+          path = "/vault/data"
+        }
+    ha:
+      enabled: false
+    serviceAccount:
+      create: true
+      serviceDiscovery:
+        enabled: true
+    statefulSet:
+      securityContext:
+        pod: {}
+        container: {}
+    hostNetwork: false
+  
+  # Vault UI
+  ui:
+    enabled: false
+    publishNotReadyAddresses: true
+    activeVaultPodOnly: false
+    serviceType: "ClusterIP"
+    serviceNodePort: null
+    externalPort: 8200
+    targetPort: 8200
+    serviceIPFamilyPolicy: ""
+    serviceIPFamilies: []
+    externalTrafficPolicy: Cluster
+    annotations: {}
+  csi:
+    enabled: false
+  serverTelemetry:
+    serviceMonitor:
+      enabled: false
+    prometheusRules:
+        enabled: false
