@@ -1,14 +1,12 @@
-FROM hashicorp/vault
+FROM alpine:3.20
 
 RUN if [ $(uname -m) = "x86_64" ] ; then export CPU_ARCH=amd64 ; else export CPU_ARCH=arm64 ; fi && \
     echo "Detected CPU architecture: $CPU_ARCH" && \
-    apk add --no-cache curl && \
+    apk add --no-cache curl jq && \
     curl -LO https://dl.k8s.io/release/$(curl -Ls https://dl.k8s.io/release/stable.txt)/bin/linux/$CPU_ARCH/kubectl && \
     chmod +x kubectl && \
     mv kubectl /usr/local/bin/kubectl && \
     curl -LO https://releases.hashicorp.com/hcp/0.4.0/hcp_0.4.0_linux_$CPU_ARCH.zip && \
     unzip hcp_0.4.0_linux_$CPU_ARCH.zip && \
     chmod +x hcp && \
-    mv hcp /usr/local/bin/hcp && \
-    apk del curl
-
+    mv hcp /usr/local/bin/hcp

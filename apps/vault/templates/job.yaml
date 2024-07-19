@@ -5,17 +5,38 @@ metadata:
 spec:
   template:
     spec:
-      serviceAccountName: secret-creator
+      serviceAccountName: vault-init
       containers:
       - name: vault-init
-        image: {{ .Values.vault.server.image.repository }}:{{ .Values.vault.server.image.tag }}
-        imagePullPolicy: {{ .Values.vault.server.image.pullPolicy }}
+        image: ghcr.io/ungarscool1/infrastructure/vault-init:latest
+        imagePullPolicy: IfNotPresent
+        envFrom:
+        - secretRef:
+            name: hcp-vault-auth
         command:
         - sh
         - -c
         - >-
-          vault operator init -key-shares={{ .Values.init.key_shares }} -key-threshold={{ .Values.init.key_threshold }} -format=json > /tmp/init.json
-          jq -r '.unseal_keys_b64[]' /tmp/init.json | xargs -I {} kubectl create secret generic vault-unseal-keys --from-literal=key={}
-          jq -r '.root_token' /tmp/init.json | xargs -I {} kubectl create secret generic vault-root-token --from-literal=token={}
+          if [ -z "$clientID" ] || [ -z "$clientSecret" ]; then
+            echo "clientID or clientSecret is not set"
+            exit 1
+          fi
+          while ! curl http://vault.{{.Release.Namespace}}.svc.cluster.local:8200/; do
+            echo "Waiting for vault to be ready"
+            sleep 2
+          done
+          hcp auth login --client-id=$clientID --client-secret=$clientSecret
+          curl -X POST -H "Content-Type: application/json" -d '{"secret_shares": {{ .Values.init.key_shares }},"secret_threshold": {{ .Values.init.key_threshold }}}' http://vault.{{.Release.Namespace}}.svc.cluster.local:8200/v1/sys/init > /tmp/init.json
+          unseal_keys=$(jq -r '.keys[]' /tmp/init.json)
+          root_token=$(jq -r '.root_token' /tmp/init.json)
+          cat /tmp/init.json
+          index=0
+          for key in $unseal_keys; do
+            echo $key | hcp vault-secrets secrets create recovery_key$index --app vault --data-file=-
+            index=$((index+1))
+          done
+          echo $root_token | hcp vault-secrets secrets create root_token --app vault --data-file=-
+          kubectl create secret generic vault-root-token --from-literal=root_token=$root_token
+          echo "Vault initialized"
       restartPolicy: Never
   backoffLimit: 0

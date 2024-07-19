@@ -1,23 +1,32 @@
-#apiVersion: batch/v1
-#kind: CronJob
-#metadata:
-#  name: vault-unseal
-#spec:
-#  schedule: "*/5 * * * *"
-#  jobTemplate:
-#    spec:
-#      template:
-#        spec:
-#          containers:
-#          - name: vault-unseal
-#            image: {{ .Values.vault.server.image.repository }}:{{ .Values.vault.server.image.tag }}
-#            imagePullPolicy: {{ .Values.vault.server.image.pullPolicy }}
-#            command:
-#            - sh
-#            - -c
-#            - >-
-#              # Get the unseal key from the secret
-#              kubectl get secret vault-unseal-key -o jsonpath='{.data.unseal_key}' | base64 -d > /tmp/unseal_key
-#              # Unseal the vault
-#              vault operator unseal $(cat /tmp/unseal_key)
-#          restartPolicy: OnFailure
+apiVersion: batch/v1
+kind: CronJob
+metadata:
+  name: vault-unseal
+spec:
+  schedule: "*/5 * * * *"
+  jobTemplate:
+    spec:
+      template:
+        spec:
+          containers:
+          - name: vault-unseal
+            envFrom:
+            - secretRef:
+                name: hcp-vault-auth
+            image: ghcr.io/ungarscool1/infrastructure/vault-init:latest
+            imagePullPolicy: IfNotPresent
+            command:
+            - sh
+            - -c
+            - >-
+              if [ -z "$clientID" ] || [ -z "$clientSecret" ]; then
+                echo "clientID or clientSecret is not set"
+                exit 1
+              fi
+              hcp auth login --client-id=$clientID --client-secret=$clientSecret
+              for index in $(seq 0 {{ .Values.init.key_threshold }}); do
+                key=$(hcp vault-secrets secrets get recovery_key$index --app vault | jq -r '.static_version.value')
+                curl -X POST -H "Content-Type: application/json" -d '{"key": "$key"}' http://vault.{{.Release.Namespace}}.svc.cluster.local:8200/v1/sys/unseal
+              done
+              echo "Vault unsealed"
+          restartPolicy: OnFailure
