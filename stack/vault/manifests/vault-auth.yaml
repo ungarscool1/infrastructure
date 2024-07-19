@@ -8,3 +8,14 @@ spec:
   projectID: ${projectId}
   servicePrincipal:
     secretRef: vault-auth
+---
+apiVersion: secrets.hashicorp.com/v1beta1
+kind: HCPAuth
+metadata:
+  name: vault
+  namespace: vault
+spec:
+  organizationID: ${organizationId}
+  projectID: ${projectId}
+  servicePrincipal:
+    secretRef: vault

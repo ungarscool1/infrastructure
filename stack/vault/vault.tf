@@ -14,8 +14,10 @@ resource "kubectl_manifest" "secret" {
     helm_release.cluster_secret
   ]
   yaml_body = templatefile("./manifests/vault-auth-secret.yaml", {
-    clientId : base64encode(hcp_service_principal_key.self.client_id),
-    clientSecret : base64encode(hcp_service_principal_key.self.client_secret)
+    globalClientId: base64encode(hcp_service_principal_key.self.client_id),
+    globalClientSecret: base64encode(hcp_service_principal_key.self.client_secret),
+    vaultClientId: base64encode(hcp_service_principal_key.vault.client_id),
+    vaultClientSecret: base64encode(hcp_service_principal_key.vault.client_secret),
   })
   sensitive_fields = ["data"]
 }
@@ -28,4 +30,16 @@ resource "kubectl_manifest" "authentication" {
     organizationId : data.hcp_organization.organization.resource_id,
     projectId : hcp_project.self.resource_id,
   })
+}
+
+resource "hcp_vault_secrets_app" "vault" {
+  app_name = "vault"
+  description = "Self-managed Vault"
+  project_id = hcp_project.self.resource_id
+}
+
+resource "kubernetes_namespace" "vault" {
+  metadata {
+    name = "vault"
+  }
 }
