@@ -2,6 +2,8 @@ apiVersion: batch/v1
 kind: Job
 metadata:
   name: vault-init
+  annotations:
+    "helm.sh/hook": post-install
 spec:
   template:
     spec:
@@ -25,6 +27,10 @@ spec:
             echo "Waiting for vault to be ready"
             sleep 2
           done
+          if ! curl http://vault.{{.Release.Namespace}}.svc.cluster.local:8200/v1/sys/health | jq -e '.initialized' | grep -q false; then
+                echo "Vault is already initialized"
+                exit 0
+              fi
           hcp auth login --client-id=$clientID --client-secret=$clientSecret
           curl -X POST -H "Content-Type: application/json" -d '{"secret_shares": {{ .Values.init.key_shares }},"secret_threshold": {{ .Values.init.key_threshold }}}' http://vault.{{.Release.Namespace}}.svc.cluster.local:8200/v1/sys/init > /tmp/init.json
           unseal_keys=$(jq -r '.keys[]' /tmp/init.json)
