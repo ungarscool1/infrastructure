@@ -25,7 +25,7 @@ spec:
               fi
               hcp auth login --client-id=$clientID --client-secret=$clientSecret
               for index in $(seq 0 {{ .Values.init.key_threshold }}); do
-                key=$(hcp vault-secrets secrets get recovery_key$index --app vault | jq -r '.static_version.value')
+                key=$(hcp vault-secrets secrets open recovery_key$index --app vault | jq -r '.static_version.value')
                 curl -X POST -H "Content-Type: application/json" -d '{"key": "$key"}' http://vault.{{.Release.Namespace}}.svc.cluster.local:8200/v1/sys/unseal
               done
               echo "Vault unsealed"
