@@ -29,14 +29,14 @@ spec:
           curl -X POST -H "Content-Type: application/json" -d '{"secret_shares": {{ .Values.init.key_shares }},"secret_threshold": {{ .Values.init.key_threshold }}}' http://vault.{{.Release.Namespace}}.svc.cluster.local:8200/v1/sys/init > /tmp/init.json
           unseal_keys=$(jq -r '.keys[]' /tmp/init.json)
           root_token=$(jq -r '.root_token' /tmp/init.json)
-          cat /tmp/init.json
           index=0
           for key in $unseal_keys; do
             echo $key | hcp vault-secrets secrets create recovery_key$index --app vault --data-file=-
+            curl -X POST -H "Content-Type: application/json" -d '{"key": "'$key'"}' http://vault.{{.Release.Namespace}}.svc.cluster.local:8200/v1/sys/unseal
             index=$((index+1))
           done
           echo $root_token | hcp vault-secrets secrets create root_token --app vault --data-file=-
           kubectl create secret generic vault-root-token --from-literal=root_token=$root_token
-          echo "Vault initialized"
+          echo "Vault initialized and unsealed"
       restartPolicy: Never
   backoffLimit: 0
