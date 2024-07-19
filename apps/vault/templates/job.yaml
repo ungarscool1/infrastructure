@@ -38,5 +38,11 @@ spec:
           echo $root_token | hcp vault-secrets secrets create root_token --app vault --data-file=-
           kubectl create secret generic vault-root-token --from-literal=root_token=$root_token
           echo "Vault initialized and unsealed"
+          {{- if .Values.init.engine }}
+          echo "Create {{ .Values.init.engine.name }} ({{ .Values.init.engine.type }}) engine"
+          curl 'http://vault.{{.Release.Namespace}}.svc.cluster.local:8200/v1/sys/mounts/{{ .Values.init.engine.name }}' \
+          -H "x-vault-token: $root_token" \
+          --data-raw '{"path":"{{ .Values.init.engine.name }}","type":"{{ .Values.init.engine.type }}","generate_signing_key":true,"config":{"max_lease_ttl":0,"listing_visibility":"hidden","id":"{{ .Values.init.engine.name }}"},"options":{"version":{{ .Values.init.engine.version }}},"id":"{{ .Values.init.engine.name }}"}'
+          {{- end }}
       restartPolicy: Never
   backoffLimit: 0

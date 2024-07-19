@@ -1,6 +1,11 @@
 init:
   key_shares: 6
   key_threshold: 3
+  engine:
+    name: applications
+    max_versions: 5
+    type: kv
+    version: 2
 
 vault:
   global:
