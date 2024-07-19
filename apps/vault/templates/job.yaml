@@ -2,8 +2,6 @@ apiVersion: batch/v1
 kind: Job
 metadata:
   name: vault-init
-  annotations:
-    "helm.sh/hook": post-install
 spec:
   template:
     spec:
