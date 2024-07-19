@@ -18,7 +18,7 @@ spec:
             command:
             - sh
             - -c
-            - >-
+            - |
               if [ -z "$clientID" ] || [ -z "$clientSecret" ]; then
                 echo "clientID or clientSecret is not set"
                 exit 1
