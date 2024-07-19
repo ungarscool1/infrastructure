@@ -23,9 +23,9 @@ spec:
                 echo "clientID or clientSecret is not set"
                 exit 1
               fi
-              if ! curl http://vault.{{.Release.Namespace}}.svc.cluster.local:8200/v1/sys/health | jq -e '.sealed' | grep -q false; then
+              if ! curl http://vault.{{.Release.Namespace}}.svc.cluster.local:8200/v1/sys/health | jq -e '.sealed' | grep -q true; then
                 echo "Vault is already unsealed"
-                exit 1
+                exit 0
               fi
               hcp auth login --client-id=$clientID --client-secret=$clientSecret
               for index in $(seq 1 {{ .Values.init.key_threshold }}); do

@@ -55,8 +55,8 @@ resource "kubernetes_secret" "vault" {
     namespace = kubernetes_namespace.vault.metadata[0].name
   }
   data = {
-    "clientID" = base64encode(hcp_service_principal_key.vault.client_id)
-    "clientSecret" = base64encode(hcp_service_principal_key.vault.client_secret)
+    "clientID" = hcp_service_principal_key.vault.client_id
+    "clientSecret" = hcp_service_principal_key.vault.client_secret
   }
 }
 
