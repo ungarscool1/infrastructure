@@ -1,49 +1,22 @@
-resource "hcp_vault_secrets_app" "self" {
-  app_name    = "outline"
-  description = ""
-  project_id = data.terraform_remote_state.vault_outputs.outputs.project_id
-}
-
-resource "hcp_vault_secrets_secret" "sso_domain" {
-  app_name     = hcp_vault_secrets_app.self.app_name
-  project_id   = data.terraform_remote_state.vault_outputs.outputs.project_id
-  secret_name  = "SSO_DOMAIN"
-  secret_value = var.sso_domain
-}
-
-resource "hcp_vault_secrets_secret" "sso_client_id" {
-  app_name     = hcp_vault_secrets_app.self.app_name
-  project_id   = data.terraform_remote_state.vault_outputs.outputs.project_id
-  secret_name  = "OIDC_CLIENT_ID"
-  secret_value = var.sso_client_id
-}
-
-resource "hcp_vault_secrets_secret" "sso_client_secret" {
-  app_name     = hcp_vault_secrets_app.self.app_name
-  project_id   = data.terraform_remote_state.vault_outputs.outputs.project_id
-  secret_name  = "OIDC_CLIENT_SECRET"
-  secret_value = var.sso_client_secret
-}
-
-resource "hcp_vault_secrets_secret" "s3_ak" {
-  app_name     = hcp_vault_secrets_app.self.app_name
-  project_id   = data.terraform_remote_state.vault_outputs.outputs.project_id
-  secret_name  = "AWS_ACCESS_KEY_ID"
-  secret_value = var.aws_s3_access_key
-}
-
-resource "hcp_vault_secrets_secret" "s3_sk" {
-  app_name     = hcp_vault_secrets_app.self.app_name
-  project_id   = data.terraform_remote_state.vault_outputs.outputs.project_id
-  secret_name  = "AWS_SECRET_ACCESS_KEY"
-  secret_value = var.aws_s3_secret_key
-}
-
-resource "hcp_vault_secrets_secret" "s3_endpoint" {
-  app_name     = hcp_vault_secrets_app.self.app_name
-  project_id   = data.terraform_remote_state.vault_outputs.outputs.project_id
-  secret_name  = "AWS_S3_UPLOAD_BUCKET_URL"
-  secret_value = var.aws_s3_endpoint
+resource "vault_kv_secret_v2" "self" {
+  mount                      = "applications"
+  name                       = "outline"
+  cas                        = 1
+  delete_all_versions        = true
+  data_json                  = jsonencode(
+  {
+    AWS_ACCESS_KEY_ID        = var.aws_s3_access_key,
+    AWS_SECRET_ACCESS_KEY    = var.aws_s3_secret_key,
+    AWS_S3_UPLOAD_BUCKET_URL = var.aws_s3_endpoint,
+    OIDC_CLIENT_ID           = var.sso_client_id,
+    OIDC_CLIENT_SECRET       = var.sso_client_secret,
+    OIDC_DOMAIN              = var.sso_domain,
+    POSTGRES_USERNAME        = random_string.db_username.result,
+    POSTGRES_PASSWORD        = random_password.db_password.result,
+    SECRET_KEY               = random_bytes.secret_key.hex,
+    UTILS_SECRET             = random_bytes.utils_secret.hex
+  }
+  )
 }
 
 resource "random_password" "db_password" {
@@ -52,21 +25,15 @@ resource "random_password" "db_password" {
   override_special = "!#$&()-_=+[]{}<>:"
 }
 
-resource "hcp_vault_secrets_secret" "db_password" {
-  app_name     = hcp_vault_secrets_app.self.app_name
-  project_id   = data.terraform_remote_state.vault_outputs.outputs.project_id
-  secret_name  = "POSTGRES_PASSWORD"
-  secret_value = random_password.db_password.result
-}
-
 resource "random_string" "db_username" {
   length           = 12
   special          = false
 }
 
-resource "hcp_vault_secrets_secret" "db_username" {
-  app_name     = hcp_vault_secrets_app.self.app_name
-  project_id   = data.terraform_remote_state.vault_outputs.outputs.project_id
-  secret_name  = "POSTGRES_USERNAME"
-  secret_value = random_string.db_username.result
+resource "random_bytes" "secret_key" {
+  length = 32
+}
+
+resource "random_bytes" "utils_secret" {
+  length = 32
 }
