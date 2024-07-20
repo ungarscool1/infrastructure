@@ -20,6 +20,10 @@ terraform {
       source  = "hashicorp/hcp"
       version = "0.92.0"
     }
+    kubernetes = {
+      source = "hashicorp/kubernetes"
+      version = "2.31.0"
+    }
   }
 }
 
@@ -30,3 +34,7 @@ provider "helm" {
 }
 
 provider "hcp" {}
+
+provider "kubernetes" {
+  config_path    = "~/.kube/config"
+}
