@@ -1,0 +1,5 @@
+apiVersion: v2
+name: outline
+description: Outline is used to create documentation about the infrastructure and personnal projects.
+type: application
+version: 0.1.0

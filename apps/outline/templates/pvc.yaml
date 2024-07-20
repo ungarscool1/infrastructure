@@ -1,0 +1,23 @@
+{{ if eq .Values.outline.storage.backend "local" }}
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: outline
+spec:
+  accessModes:
+    - ReadWriteOnce
+  resources:
+    requests:
+      storage: {{ .Values.outline.storage.volume.size }}
+{{ end }}
+---
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: postgres
+spec:
+  accessModes:
+    - ReadWriteOnce
+  resources:
+    requests:
+      storage: {{ .Values.postgres.storage }}
