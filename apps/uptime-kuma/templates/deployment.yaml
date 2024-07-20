@@ -26,14 +26,14 @@ spec:
         livenessProbe:
           tcpSocket:
             port: http
-          initialDelaySeconds: 100
+          initialDelaySeconds: 200
           periodSeconds: 10
         readinessProbe:
           httpGet:
             scheme: HTTP
             path: /
             port: http
-          initialDelaySeconds: 100
+          initialDelaySeconds: 200
           periodSeconds: 10
         volumeMounts:
         - name: data
