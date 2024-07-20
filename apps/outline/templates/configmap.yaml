@@ -21,9 +21,9 @@ data:
   DEBUG: {{ .Values.outline.configuration.debug | default "http" }}
   LOG_LEVEL: {{ .Values.outline.configuration.log_level | default "info" }}
   DEFAULT_LANGUAGE: {{ .Values.outline.configuration.default_language | default "en_US" }}
-  RATE_LIMITER_ENABLED: {{ .Values.outline.configuration.rate_limiter_enabled | default "true" | quote }}
-  RATE_LIMITER_REQUESTS: {{ .Values.outline.configuration.rate_limiter_requests | default "100" | quote }}
-  RATE_LIMITER_DURATION_WINDOW: {{ .Values.outline.configuration.rate_limiter_duration_window | default "60" | quote }}
+  RATE_LIMITER_ENABLED: {{ .Values.outline.configuration.rate_limiter.enabled | default "true" | quote }}
+  RATE_LIMITER_REQUESTS: {{ .Values.outline.configuration.rate_limiter.requests | default "100" | quote }}
+  RATE_LIMITER_DURATION_WINDOW: {{ .Values.outline.configuration.rate_limiter.duration_window | default "60" | quote }}
   OIDC_SCOPES: {{ .Values.outline.configuration.oidc.scopes | default "openid profile email" }}
   OIDC_DISPLAY_NAME: {{ .Values.outline.configuration.oidc.display_name | default "OIDC" }}
   OIDC_USERNAME_CLAIM: {{ .Values.outline.configuration.oidc.username_claim | default "preferred_username" }}

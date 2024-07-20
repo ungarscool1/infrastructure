@@ -21,9 +21,10 @@ outline:
     debug: http
     log_level: info
     default_language: en_US
-    rate_limiter_enabled: true
-    rate_limiter_requests: 100
-    rate_limiter_duration_window: 60
+    rate_limiter:
+      enabled: true
+      requests: 1000
+      duration_window: 60
     oidc:
       scopes: openid profile email
       display_name: UAS
