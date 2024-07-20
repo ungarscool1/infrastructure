@@ -3,15 +3,39 @@ resource "random_password" "vaultwarden_db_password" {
   special          = false
 }
 
-resource "hcp_vault_secrets_app" "vaultwarden" {
-  app_name    = "vaultwarden"
-  project_id = data.terraform_remote_state.vault.outputs.project_id
-  description = "Vaultwarden application secrets"
+resource "vault_kubernetes_auth_backend_role" "self" {
+  backend                          = "kubernetes"
+  role_name                        = "vaultwarden"
+  bound_service_account_names      = ["default"]
+  bound_service_account_namespaces = ["vaultwarden"]
+  token_ttl                        = 3600
+  token_policies                   = [ vault_policy.self.name ]
+  audience                         = "vaultwarden"
 }
 
-resource "hcp_vault_secrets_secret" "db_password" {
-  app_name     = "vaultwarden"
-  project_id = data.terraform_remote_state.vault.outputs.project_id
-  secret_name  = "POSTGRES_PASSWORD"
-  secret_value = random_password.vaultwarden_db_password.result
+data "vault_policy_document" "self" {
+  rule {
+    path         = vault_kv_secret_v2.self.path
+    capabilities = ["read", "list"]
+    description  = "Vaultwarden read secrets"
+  }
+}
+
+resource "vault_policy" "self" {
+  name   = "vaultwarden_policy"
+  policy = data.vault_policy_document.self.hcl
+}
+
+resource "vault_kv_secret_v2" "self" {
+  mount                      = "applications"
+  name                       = "vaultwarden"
+  cas                        = 1
+  delete_all_versions        = true
+  data_json                  = jsonencode(
+  {
+    POSTGRES_PASSWORD        = random_password.vaultwarden_db_password.result,
+    PUSH_INSTALLATION_KEY    = var.push_installation_key,
+    PUSH_INSTALLATION_ID     = var.push_installation_id
+  }
+  )
 }

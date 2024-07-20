@@ -24,6 +24,10 @@ terraform {
       source  = "hashicorp/random"
       version = "3.6.2"
     }
+    vault = {
+      source = "hashicorp/vault"
+      version = "4.3.0"
+    }
   }
 }
 
@@ -33,4 +37,11 @@ provider "helm" {
   }
 }
 
-provider "hcp" {}
+provider "hcp" {
+  project_id = data.terraform_remote_state.vault.outputs.project_id
+}
+
+provider "vault" {
+  address = "https://vault.apps.legodard.fr"
+  token = data.hcp_vault_secrets_secret.vault_token.secret_value
+}
