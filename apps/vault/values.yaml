@@ -10,17 +10,6 @@ init:
 vault:
   global:
     enabled: true
-    externalVaultAddr: ""
-    # Create PodSecurityPolicy for pods
-    psp:
-      enable: false
-      # Annotation for PodSecurityPolicy.
-      # This is a multi-line templated string map, and can also be set as YAML.
-      annotations: |
-        seccomp.security.alpha.kubernetes.io/allowedProfileNames: docker/default,runtime/default
-        apparmor.security.beta.kubernetes.io/allowedProfileNames: runtime/default
-        seccomp.security.alpha.kubernetes.io/defaultProfileName:  runtime/default
-        apparmor.security.beta.kubernetes.io/defaultProfileName:  runtime/default
     serverTelemetry:
       prometheusOperator: false
   injector:
@@ -166,16 +155,6 @@ vault:
   # Vault UI
   ui:
     enabled: false
-    publishNotReadyAddresses: true
-    activeVaultPodOnly: false
-    serviceType: "ClusterIP"
-    serviceNodePort: null
-    externalPort: 8200
-    targetPort: 8200
-    serviceIPFamilyPolicy: ""
-    serviceIPFamilies: []
-    externalTrafficPolicy: Cluster
-    annotations: {}
   csi:
     enabled: false
   serverTelemetry:
