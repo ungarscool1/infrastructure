@@ -59,16 +59,3 @@ resource "kubernetes_secret" "vault" {
     "clientSecret" = hcp_service_principal_key.vault.client_secret
   }
 }
-
-resource "kubectl_manifest" "hcp_vault_auth" {
-  depends_on = [
-    kubectl_manifest.secret
-  ]
-  yaml_body = templatefile("./manifests/vault-auth.yaml", {
-    name: kubernetes_secret.vault.metadata[0].name,
-    namespace: kubernetes_namespace.vault.metadata[0].name,
-    organizationId : data.hcp_organization.organization.resource_id,
-    projectId : hcp_project.self.resource_id,
-    secretRef: kubernetes_secret.vault.metadata[0].name
-  })
-}
