@@ -18,20 +18,11 @@ spec:
       - name: uptime-kuma
         image: {{ .Values.image.repository | default "louislam/uptime-kuma" }}:{{ .Values.image.tag | default "latest" }}
         imagePullPolicy: {{ .Values.image.pullPolicy | default "IfNotPresent" }}
-        env:
-        - name: PUID
-          value: "1000"
-        - name: PGID
-          value: "1000"
         ports:
         - containerPort: 3001
           name: http
         resources:
           {{- toYaml .Values.resources | nindent 12 }}
-        securityContext:
-          runAsUser: 1000
-          runAsGroup: 1000
-          fsGroup: 1000
         livenessProbe:
           tcpSocket:
             port: http
