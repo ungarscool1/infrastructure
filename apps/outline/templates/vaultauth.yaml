@@ -7,6 +7,6 @@ spec:
   mount: kubernetes
   kubernetes:
     role: outline
-    serviceAccount: default
+    serviceAccount: outline
     audiences:
       - outline
