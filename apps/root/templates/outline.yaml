@@ -1,11 +1,19 @@
-project: default
-source:
-  repoURL: 'https://github.com/ungarscool1/infrastructure'
-  path: apps/outline
-  targetRevision: HEAD
-destination:
-  server: 'https://kubernetes.default.svc'
-  namespace: outline
-syncPolicy:
-  syncOptions:
-    - CreateNamespace=true
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+  name: outline
+  namespace: argocd
+  finalizers:
+  - resources-finalizer.argocd.argoproj.io
+spec:
+  project: default
+  source:
+    repoURL: 'https://github.com/ungarscool1/infrastructure'
+    path: apps/outline
+    targetRevision: HEAD
+  destination:
+    server: 'https://kubernetes.default.svc'
+    namespace: outline
+  syncPolicy:
+    syncOptions:
+      - CreateNamespace=true
