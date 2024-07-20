@@ -1,0 +1,36 @@
+apiVersion: batch/v1
+kind: CronJob
+metadata:
+  name: vault-unseal
+spec:
+  schedule: "*/5 * * * *"
+  jobTemplate:
+    spec:
+      template:
+        spec:
+          containers:
+          - name: vault-unseal
+            envFrom:
+            - secretRef:
+                name: hcp-vault-auth
+            image: ghcr.io/ungarscool1/infrastructure/vault-init:latest
+            imagePullPolicy: IfNotPresent
+            command:
+            - sh
+            - -c
+            - |
+              if [ -z "$clientID" ] || [ -z "$clientSecret" ]; then
+                echo "clientID or clientSecret is not set"
+                exit 1
+              fi
+              if ! curl http://vault.{{.Release.Namespace}}.svc.cluster.local:8200/v1/sys/health | jq -e '.sealed' | grep -q true; then
+                echo "Vault is already unsealed"
+                exit 0
+              fi
+              hcp auth login --client-id=$clientID --client-secret=$clientSecret
+              for index in $(seq 1 {{ .Values.init.key_threshold }}); do
+                key=$(hcp vault-secrets secrets open recovery_key$index --app vault --format json | jq -r '.static_version.value' | tr -d '\n')
+                curl -X POST -H "Content-Type: application/json" -d '{"key": "'$key'"}' http://vault.{{.Release.Namespace}}.svc.cluster.local:8200/v1/sys/unseal
+              done
+              echo "Vault unsealed"
+          restartPolicy: OnFailure
