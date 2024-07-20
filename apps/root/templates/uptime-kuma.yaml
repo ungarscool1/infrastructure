@@ -11,9 +11,9 @@ spec:
     server: https://kubernetes.default.svc
   project: default
   source:
-    chart: uptime-kuma
-    repoURL: https://dirsigler.github.io/uptime-kuma-helm
-    targetRevision: 2.19.1
+    path: apps/uptime-kuma
+    repoURL: https://github.com/ungarscool1/infrastructure
+    targetRevision: uptime-kuma
   syncPolicy:
     automated:
       selfHeal: true
