@@ -1,0 +1,23 @@
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+  name: uptime-kuma
+  namespace: argocd
+  finalizers:
+  - resources-finalizer.argocd.argoproj.io
+spec:
+  destination:
+    namespace: uptime-kuma
+    server: https://kubernetes.default.svc
+  project: default
+  source:
+    chart: uptime-kuma
+    repoURL: https://dirsigler.github.io/uptime-kuma-helm
+    targetRevision: 2.19.1
+  syncPolicy:
+    automated:
+      selfHeal: true
+    syncOptions:
+    - CreateNamespace=true
+    - Prune=true
+  
