@@ -19,4 +19,4 @@ resources:
 volume:
   size: 4Gi
   accessMode: ReadWriteOnce
-  storageClass: ""
+  storageClass: "longhorn"
