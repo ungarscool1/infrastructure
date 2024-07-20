@@ -6,6 +6,7 @@ spec:
   selector:
     app: uptime-kuma
   ports:
-    - protocol: TCP
+    - name: http
+      protocol: TCP
       port: 3001
-      targetPort: http
+      targetPort: 3001
