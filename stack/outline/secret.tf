@@ -1,8 +1,8 @@
 resource "vault_kubernetes_auth_backend_role" "self" {
   backend                          = "kubernetes"
   role_name                        = "outline"
-  bound_service_account_names      = [""]
-  bound_service_account_namespaces = [""]
+  bound_service_account_names      = ["outline"]
+  bound_service_account_namespaces = ["outline"]
   token_ttl                        = 3600
   token_policies                   = [ vault_policy.self.name ]
   audience                         = "outline"
