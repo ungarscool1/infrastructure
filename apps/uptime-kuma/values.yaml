@@ -8,14 +8,6 @@ ingress:
   annotations:
     traefik.ingress.kubernetes.io/router.middlewares: waf-crowdsec-bouncer-traefik-plugin@kubernetescrd
 
-resources:
-  requests:
-    cpu: 100m
-    memory: 128Mi
-  limits:
-    cpu: 100m
-    memory: 128Mi
-
 volume:
   size: 4Gi
   accessMode: ReadWriteOnce
