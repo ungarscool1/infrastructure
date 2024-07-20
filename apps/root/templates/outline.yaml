@@ -1,0 +1,11 @@
+project: default
+source:
+  repoURL: 'https://github.com/ungarscool1/infrastructure'
+  path: apps/outline
+  targetRevision: HEAD
+destination:
+  server: 'https://kubernetes.default.svc'
+  namespace: outline
+syncPolicy:
+  syncOptions:
+    - CreateNamespace=true

@@ -1,0 +1,123 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: outline
+spec:
+  selector:
+    matchLabels:
+      app: outline
+  strategy:
+    type: Recreate
+  template:
+    metadata:
+      labels:
+        app: outline
+    spec:
+      {{- if eq .Values.outline.storage.backend "local" }}
+      volumes:
+      - name: data
+        persistentVolumeClaim:
+          claimName: outline
+      {{- end }}
+      initContainers:
+      - name: init-db
+        image: busybox:1.28
+        command: ['sh', '-c', "until nslookup postgres.{{ .Release.Namespace }}.svc.cluster.local; do echo waiting for postgres; sleep 2; done"]
+      - name: migrate-db
+        image: {{ .Values.outline.image.repository }}:{{ .Values.outline.image.tag }}
+        command: ['yarn', 'db:migrate']
+        envFrom:
+        - configMapRef:
+            name: outline
+        - secretRef:
+            name: outline
+        env:
+        - name: NODE_ENV
+          value: production-ssl-disabled
+      containers:
+      - name: outline
+        image: {{ .Values.outline.image.repository }}:{{ .Values.outline.image.tag }}
+        envFrom:
+        - configMapRef:
+            name: outline
+        - secretRef:
+            name: outline
+        env:
+        - name: PGSSLMODE
+          value: disable
+        ports:
+        - containerPort: 3000
+        {{- if eq .Values.outline.storage.backend "local" }}
+        volumeMounts:
+        - name: data
+          mountPath: "/var/lib/outline/data"
+        {{- end }}
+      livenessProbe:
+        httpGet:
+          path: /
+          port: 3000
+        initialDelaySeconds: 3
+        periodSeconds: 3
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: postgres
+spec:
+  selector:
+    matchLabels:
+      app: postgres
+  strategy:
+    type: Recreate
+  template:
+    metadata:
+      labels:
+        app: postgres
+    spec:
+      volumes:
+      - name: data
+        persistentVolumeClaim:
+          claimName: postgres
+      containers:
+      - name: postgres
+        volumeMounts:
+        - name: data
+          mountPath: "/var/lib/postgresql/data"
+        image: {{ .Values.postgres.image.repository }}:{{ .Values.postgres.image.tag }}
+        env:
+        - name: POSTGRES_USER
+          valueFrom:
+            secretKeyRef:
+              name: outline
+              key: POSTGRES_USERNAME
+        - name: POSTGRES_PASSWORD
+          valueFrom:
+            secretKeyRef:
+              name: outline
+              key: POSTGRES_PASSWORD
+        - name: POSTGRES_DB
+          valueFrom:
+            secretKeyRef:
+              name: outline
+              key: POSTGRES_USERNAME
+        ports:
+        - containerPort: 5432
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: redis
+spec:
+  selector:
+    matchLabels:
+      app: redis
+  template:
+    metadata:
+      labels:
+        app: redis
+    spec:
+      containers:
+      - name: redis
+        image: {{ .Values.redis.image.repository }}:{{ .Values.redis.image.tag }}
+        ports:
+        - containerPort: 6379
