@@ -13,7 +13,7 @@ spec:
   source:
     path: apps/uptime-kuma
     repoURL: https://github.com/ungarscool1/infrastructure
-    targetRevision: uptime-kuma
+    targetRevision: HEAD
   syncPolicy:
     automated:
       selfHeal: true
