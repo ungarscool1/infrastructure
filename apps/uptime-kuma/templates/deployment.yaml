@@ -1,0 +1,44 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: uptime-kuma
+spec:
+  selector:
+    matchLabels:
+      app: uptime-kuma
+  replicas: 1
+  strategy:
+    type: Recreate
+  template:
+    metadata:
+      labels:
+        app: uptime-kuma
+    spec:
+      containers:
+      - name: uptime-kuma
+        image: {{ .Values.image.repository | default "louislam/uptime-kuma" }}:{{ .Values.image.tag | default "latest" }}
+        imagePullPolicy: {{ .Values.image.pullPolicy | default "IfNotPresent" }}
+        ports:
+        - containerPort: 3001
+          name: http
+        resources:
+          {{- toYaml .Values.resources | nindent 12 }}
+        livenessProbe:
+          tcpSocket:
+            port: http
+          initialDelaySeconds: 200
+          periodSeconds: 10
+        readinessProbe:
+          httpGet:
+            scheme: HTTP
+            path: /
+            port: http
+          initialDelaySeconds: 200
+          periodSeconds: 10
+        volumeMounts:
+        - name: data
+          mountPath: /app/data
+      volumes:
+      - name: data
+        persistentVolumeClaim:
+          claimName: uptime-kuma

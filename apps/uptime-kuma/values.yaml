@@ -1,0 +1,14 @@
+image:
+  repository: louislam/uptime-kuma
+  pullPolicy: IfNotPresent
+  tag: "1.23.13"
+
+ingress:
+  host: status.legodard.fr
+  annotations:
+    traefik.ingress.kubernetes.io/router.middlewares: waf-crowdsec-bouncer-traefik-plugin@kubernetescrd
+
+volume:
+  size: 4Gi
+  accessMode: ReadWriteOnce
+  storageClass: "longhorn"
