@@ -1,0 +1,64 @@
+llama-web:
+  client:
+    enabled: true
+    image:
+      repository: ghcr.io/ungarscool1/llama-web
+      pullPolicy: Always
+      tag: client
+    authentication:
+      enabled: false
+    quickMessages:
+      - icon: "square-terminal"
+        message: "Make a python script to sort numbers"
+      - icon: "egg"
+        message: "How to know if an egg still eatable?"
+      - icon: "luggage"
+        message: "What can I visite in Rome?"
+      - icon: "shirt"
+        message: "What can I wear with a blue shirt?"
+      - icon: "tv"
+        message: "What can I see in the same vibe as The Office?"
+    envFrom:
+      - secretRef:
+          name: ""
+  api:
+    enabled: true
+    image:
+      repository: ghcr.io/ungarscool1/llama-web
+      pullPolicy: Always
+      tag: api
+    resources:
+      limits:
+        cpu: 4000m
+        memory: 16384Mi
+      requests:
+        cpu: 100m
+        memory: 4096Mi
+    authentication:
+      enabled: false
+    alternativeComputeBackend: true
+  serviceAccount:
+    create: true
+    automount: true
+    annotations: {}
+    name: ""
+  ingress:
+    annotations: {}
+    apiAnnotations:
+      traefik.ingress.kubernetes.io/router.middlewares: waf-ip-whitelist@kubernetescrd, waf-crowdsec-bouncer-traefik-plugin@kubernetescrd, {{ .Release.Namespace }}-api-middleware@kubernetescrd
+    host: llama.legodard.fr
+    tls: []
+  
+  volumes:
+    database:
+      size: 1Gi
+      storageClass: longhorn
+      accessModes:
+        - ReadWriteOnce
+      annotations: {}
+    models:
+      size: 15Gi
+      storageClass: longhorn
+      accessModes:
+        - ReadWriteMany
+      annotations: {}

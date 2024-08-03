@@ -1,0 +1,9 @@
+apiVersion: v2
+name: llama
+description: llama-web stack
+type: application
+version: 0.1.0
+dependencies:
+  - name: llama-web
+    version: 0.1.0
+    repository: https://ungarscool1.github.io/llama-web/
