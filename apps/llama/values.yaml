@@ -18,9 +18,9 @@ llama-web:
         message: "What can I wear with a blue shirt?"
       - icon: "tv"
         message: "What can I see in the same vibe as The Office?"
-    envFrom:
-      - secretRef:
-          name: ""
+    #envFrom:
+    #  - secretRef:
+    #      name: ""
   api:
     enabled: true
     image:
