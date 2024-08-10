@@ -17,6 +17,8 @@ spec:
         fsGroup: 472
         supplementalGroups:
           - 0
+      strategy:
+        type: Recreate
       containers:
         - name: grafana
           image: grafana/grafana:{{ .Values.grafana.image.tag }}
