@@ -10,9 +10,14 @@ resource "vault_kubernetes_auth_backend_role" "self" {
 
 data "vault_policy_document" "self" {
   rule {
-    path         = vault_kv_secret_v2.self.path
+    path         = vault_kv_secret_v2.front.path
     capabilities = ["read", "list"]
-    description  = "LLama read secrets"
+    description  = "LLama front read secrets"
+  }
+  rule {
+    path         = vault_kv_secret_v2.back.path
+    capabilities = ["read", "list"]
+    description  = "LLama back read secrets"
   }
 }
 
@@ -21,18 +26,29 @@ resource "vault_policy" "self" {
   policy = data.vault_policy_document.self.hcl
 }
 
-resource "vault_kv_secret_v2" "self" {
+resource "vault_kv_secret_v2" "front" {
   mount                      = "applications"
-  name                       = "llama"
+  name                       = "llama/front"
   cas                        = 1
   delete_all_versions        = true
   data_json                  = jsonencode(
   {
     "PUBLIC_SSO_SERVER" = var.sso_domain
-    "PUBLIC_CLIENT_ID" = var.sso_client_id
-    "PUBLIC_SSO_REALM" = var.sso_realm
-    "GROQ_API_KEY" = var.groq_api_key
+    "PUBLIC_CLIENT_ID"  = var.sso_client_id
+    "PUBLIC_SSO_REALM"  = var.sso_realm
   }
   )
 }
-PUBLIC_SSO_ACCOUNT_SETTINGS_URL=PUBLIC_SSO_SERVERrealms/PUBLIC_SSO_REALM/account
+
+resource "vault_kv_secret_v2" "back" {
+  mount                      = "applications"
+  name                       = "llama/back"
+  cas                        = 1
+  delete_all_versions        = true
+  data_json                  = jsonencode(
+  {
+    "GROQ_API_KEY" = var.groq_api_key
+    "jwt.pem"      = var.jwt_pem
+  }
+  )
+}

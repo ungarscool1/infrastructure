@@ -18,3 +18,9 @@ variable "groq_api_key" {
   type        = string
   sensitive   = true
 }
+
+variable "jwt_pem" {
+  description = "The PEM to use for JWT signing in base64"
+  type        = string
+  sensitive   = true
+}
