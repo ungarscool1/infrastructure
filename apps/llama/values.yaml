@@ -50,7 +50,7 @@ llama-web:
     annotations:
       traefik.ingress.kubernetes.io/router.middlewares: waf-crowdsec-bouncer-traefik-plugin@kubernetescrd
     apiAnnotations:
-      traefik.ingress.kubernetes.io/router.middlewares: waf-crowdsec-bouncer-traefik-plugin@kubernetescrd, {{ .Release.Namespace }}-api-middleware@kubernetescrd
+      traefik.ingress.kubernetes.io/router.middlewares: waf-crowdsec-bouncer-traefik-plugin@kubernetescrd, llama-api-middleware@kubernetescrd
     host: llama.apps.legodard.fr
     tls: []
   
