@@ -39,7 +39,7 @@ llama-web:
     alternativeComputeBackend: true
     envFrom:
       - secretRef:
-          name: llama-back
+          name: llama-api
   serviceAccount:
     create: true
     automount: true
