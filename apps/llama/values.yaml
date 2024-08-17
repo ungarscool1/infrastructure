@@ -18,9 +18,9 @@ llama-web:
         text: "What can I wear with a blue shirt?"
       - icon: "tv"
         text: "What can I see in the same vibe as The Office?"
-    #envFrom:
-    #  - secretRef:
-    #      name: ""
+    envFrom:
+      - secretRef:
+          name: llama-client
   api:
     enabled: true
     image:
@@ -37,6 +37,9 @@ llama-web:
     authentication:
       enabled: false
     alternativeComputeBackend: true
+    envFrom:
+      - secretRef:
+          name: llama-back
   serviceAccount:
     create: true
     automount: true
