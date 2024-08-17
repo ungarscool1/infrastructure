@@ -6,7 +6,7 @@ llama-web:
       pullPolicy: Always
       tag: client
     authentication:
-      enabled: false
+      enabled: true
     quickMessages:
       - icon: "square-terminal"
         text: "Make a python script to sort numbers"
@@ -35,7 +35,8 @@ llama-web:
         cpu: 100m
         memory: 4096Mi
     authentication:
-      enabled: false
+      enabled: true
+      jwtSecretName: llama-api
     alternativeComputeBackend: true
     envFrom:
       - secretRef:
