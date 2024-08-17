@@ -1,6 +1,6 @@
 dependencies:
 - name: llama-web
   repository: https://ungarscool1.github.io/llama-web/
-  version: 0.1.0
-digest: sha256:8ab2bd8fe6f6e5260409e1ef2bca6dcddafb44d049fe8caf5b1ab86a5fc3b0c6
-generated: "2024-08-03T23:09:44.887893+02:00"
+  version: 0.1.1
+digest: sha256:a07a9c93196ce91eed030fb924d8e5893afffe7674e8d6cdae309099510037b8
+generated: "2024-08-17T22:43:16.108515+02:00"
