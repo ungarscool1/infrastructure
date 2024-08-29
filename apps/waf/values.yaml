@@ -21,66 +21,6 @@ crowdsec:
     persistentVolume:
       config:
         enabled: false
-  config:
-    scenarios:
-      http-sqli-probbing-detection.yaml: |
-        type: leaky
-        #requires at least 2.0 because it's using the 'data' section and the 'Upper' expr helper
-        format: 2.0
-        name: crowdsecurity/http-sqli-probbing-detection
-        data:
-          - source_url: https://hub-data.crowdsec.net/web/sqli_probe_patterns.txt
-            dest_file: sqli_probe_patterns.txt
-            type: string
-        description: "A scenario that detects SQL injection probing with minimal false positives"
-        filter: "evt.Meta.log_type in ['http_access-log', 'http_error-log'] && any(File('sqli_probe_patterns.txt'), {Upper(evt.Parsed.http_args) contains Upper(#)})"
-        groupby: evt.Meta.source_ip
-        capacity: 10
-        leakspeed: 1s
-        blackhole: 5m
-        #low false positives approach : we require distinct payloads to avoid false positives
-        distinct: evt.Parsed.http_args
-        labels:
-          remediation: true
-          classification:
-            - attack.T1595.002
-          behavior: "http:exploit"
-          label: "SQL Injection Attempt"
-          spoofable: 0
-          service: http
-          confidence: 3
-      apache-log4j2-cve-2021-44228.yaml: |
-        type: trigger
-        format: 2.0
-        #debug: true
-        name: crowdsecurity/apache_log4j2_cve-2021-44228
-        description: "Detect cve-2021-44228 exploitation attemps"
-        filter: |
-          evt.Meta.log_type in ["http_access-log", "http_error-log"] and 
-          (
-            any(File("log4j2_cve_2021_44228.txt"), { Upper(evt.Meta.http_path) contains Upper(#)})
-          or
-            any(File("log4j2_cve_2021_44228.txt"), { Upper(evt.Parsed.http_user_agent) contains Upper(#)})
-          or
-            any(File("log4j2_cve_2021_44228.txt"), { Upper(evt.Parsed.http_referer) contains Upper(#)})  
-          )
-        data:
-          - source_url: https://hub-data.crowdsec.net/web/log4j2_cve_2021_44228.txt
-            dest_file: log4j2_cve_2021_44228.txt
-            type: string
-        groupby: "evt.Meta.source_ip"
-        blackhole: 2m
-        labels:
-          service: apache
-          confidence: 3
-          spoofable: 0
-          classification:
-            - attack.T1595
-            - attack.T1190
-            - cve.CVE-2021-44228
-          behavior: "http:exploit"
-          label: "Log4j CVE-2021-44228"
-          remediation: true
   lapi:
     dashboard:
       enabled: false
