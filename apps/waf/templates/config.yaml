@@ -23,6 +23,14 @@ spec:
           secretName: crt-secret
     nodeSelector:
       kubernetes.io/hostname: cloud.legodard.fr
+    logs:
+      general:
+        level: DEBUG
+      access:
+        enabled: true
+        fields:
+          headers: 
+            defaultmode: keep
     experimental:
       plugins:
         enabled: true
