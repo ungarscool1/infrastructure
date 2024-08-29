@@ -49,7 +49,7 @@ crowdsec:
           spoofable: 0
           service: http
           confidence: 3
-      apache_log4j2_cve-2021-44228.yaml: |
+      apache-log4j2-cve-2021-44228.yaml: |
         type: trigger
         format: 2.0
         #debug: true
