@@ -18,7 +18,7 @@ terraform {
     }
     hcp = {
       source  = "hashicorp/hcp"
-      version = "0.92.0"
+      version = "0.96.0"
     }
     kubernetes = {
       source = "hashicorp/kubernetes"
