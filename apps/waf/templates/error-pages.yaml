@@ -1,0 +1,48 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: {{ .Release.Name }}-custom-errors
+  labels:
+    app: {{ .Release.Name }}-custom-errors
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: {{ .Release.Name }}-custom-errors
+  template:
+    metadata:
+      labels:
+        app: {{ .Release.Name }}-custom-errors
+    spec:
+      containers:
+        - name: {{ .Release.Name }}-custom-errors
+          image: ghcr.io/ungarscool1/infrastructure/custom-errors:latest
+          imagePullPolicy: Always
+          ports:
+            - containerPort: 80
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: {{ .Release.Name }}-custom-errors
+spec:
+  selector:
+    app: {{ .Release.Name }}-custom-errors
+  ports:
+    - protocol: TCP
+      port: 80
+      targetPort: 80
+---
+apiVersion: traefik.containo.us/v1alpha1
+kind: Middleware
+metadata:
+  name: {{ .Release.Name }}-custom-errors
+spec:
+  errors:
+    status:
+      - "403"
+      - "404"
+    service:
+      name: {{ .Release.Name }}-custom-errors
+      port: 80
+    query: "/{status}.html"

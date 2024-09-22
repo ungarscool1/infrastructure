@@ -39,6 +39,7 @@ spec:
     #      moduleName: "github.com/maxlerebourg/crowdsec-bouncer-traefik-plugin"
     #      version: "v1.3.2"
     additionalArguments:
-    - "--entrypoints.web.http.middlewares={{ .Release.Namespace }}-redirect2https@kubernetescrd"
+    - "--entrypoints.web.http.middlewares={{ .Release.Namespace }}-redirect2https@kubernetescrd,{{ .Release.Namespace }}-{{ .Release.Name }}-custom-errors@kubernetescrd"
+    - "--entrypoints.web.https.middlewares={{ .Release.Namespace }}-{{ .Release.Name }}-custom-errors@kubernetescrd"
     - "--experimental.plugins.crowdsec-bouncer-traefik-plugin.modulename=github.com/maxlerebourg/crowdsec-bouncer-traefik-plugin"
     - "--experimental.plugins.crowdsec-bouncer-traefik-plugin.version=v1.3.2"
