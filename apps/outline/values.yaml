@@ -1,7 +1,7 @@
 outline:
   image:
     repository: outlinewiki/outline
-    tag: 0.80.0
+    tag: 0.80.1
     pullPolicy: IfNotPresent
   url: docs.legodard.fr
   storage:
