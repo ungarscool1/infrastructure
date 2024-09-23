@@ -46,3 +46,22 @@ spec:
       name: {{ .Release.Name }}-custom-errors
       port: 80
     query: "/{status}.html"
+---
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: outline
+  annotations:
+    traefik.ingress.kubernetes.io/router.middlewares: {{ .Release.Namespace}}-{{ .Release.Name }}-custom-errors@kubernetescrd
+spec:
+  rules:
+    - host: *
+      http:
+        paths:
+          - path: /
+            pathType: Prefix
+            backend:
+              service:
+                name: {{ .Release.Name }}-custom-errors
+                port:
+                  number: 80
