@@ -50,13 +50,12 @@ spec:
 apiVersion: networking.k8s.io/v1
 kind: Ingress
 metadata:
-  name: outline
+  name: {{ .Release.Name }}-custom-errors
   annotations:
-    traefik.ingress.kubernetes.io/router.middlewares: {{ .Release.Namespace}}-{{ .Release.Name }}-custom-errors@kubernetescrd
+    traefik.ingress.kubernetes.io/router.middlewares: {{ .Release.Namespace }}-{{ .Release.Name }}-custom-errors@kubernetescrd
 spec:
   rules:
-    - host: *
-      http:
+    - http:
         paths:
           - path: /
             pathType: Prefix
