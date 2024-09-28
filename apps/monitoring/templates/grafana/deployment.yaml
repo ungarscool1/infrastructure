@@ -23,6 +23,9 @@ spec:
         - name: grafana
           image: grafana/grafana:{{ .Values.grafana.image.tag }}
           imagePullPolicy: {{ .Values.grafana.image.pullPolicy }}
+          envFrom:
+            - secretRef:
+                name: grafana
           ports:
             - containerPort: 3000
               name: http-grafana
