@@ -52,6 +52,16 @@ argo-cd:
   dex:
     enable: false
   repoServer:
+    serviceAccount:
+      create: true
+      name: argocd-repo-server
+    rbac:
+      - apiGroups:
+          - ""
+        resources:
+          - secrets
+        verbs:
+          - get
     env:
       - name: HELM_PLUGINS
         value: /gitops-tools/helm-plugins/
