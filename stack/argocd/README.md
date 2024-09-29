@@ -15,6 +15,11 @@
 
 ## Deploy
 
+Extract the SOPS GPG key IN the same folder as this tf stack:
+```bash
+gpg --armor --export-secret-keys <key-id> > sops.key
+```
+
 ```bash
 tfi
 tfa -auto-approve

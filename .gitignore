@@ -2,3 +2,4 @@
 *.tfstate.backup
 *.tar.gz
 *.tgz
+*.key

@@ -18,3 +18,17 @@ resource "helm_release" "argocd-apps" {
   
   values = [ file("./apps.yaml") ]
 }
+
+resource "kubernetes_secret" "sops" {
+  depends_on = [
+    helm_release.argocd,
+    helm_release.argocd-apps
+  ]
+  metadata {
+    name = "sops"
+    namespace = "argocd"
+  }
+  binary_data = {
+    "key.asc" = filebase64("./sops.key")
+  }
+}
