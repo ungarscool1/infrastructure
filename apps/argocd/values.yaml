@@ -120,7 +120,6 @@ argo-cd:
             value: "3.9.0"
         args:
           - |
-            echo "nameserver 1.1.1.1" > /etc/resolv.conf
             mkdir -p /gitops-tools/helm-plugins
   
             GO_ARCH=$(uname -m | sed -e 's/x86_64/amd64/')
