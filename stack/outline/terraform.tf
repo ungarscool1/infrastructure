@@ -10,7 +10,7 @@ terraform {
   required_providers {
     hcp = {
       source  = "hashicorp/hcp"
-      version = "0.96.0"
+      version = "0.97.0"
     }
     random = {
       source = "hashicorp/random"
