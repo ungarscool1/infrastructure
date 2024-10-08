@@ -38,5 +38,5 @@ postgres:
 redis:
   image:
     repository: redis
-    tag: 7.4.0-alpine
+    tag: 7.4.1-alpine
     pullPolicy: IfNotPresent
