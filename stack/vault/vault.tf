@@ -2,7 +2,7 @@ resource "helm_release" "vault_agent" {
   name             = "vault-secrets-operator"
   repository       = "https://helm.releases.hashicorp.com"
   chart            = "vault-secrets-operator"
-  version          = "0.9.0"
+  version          = "0.8.1"
   namespace        = "vault-secrets-operator-system"
   create_namespace = true
 }
