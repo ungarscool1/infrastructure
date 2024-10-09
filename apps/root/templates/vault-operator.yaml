@@ -13,7 +13,7 @@ spec:
   source:
     chart: vault-secrets-operator
     repoURL: https://helm.releases.hashicorp.com
-    targetRevision: 0.8.1
+    targetRevision: 0.9.0
   syncPolicy:
     automated:
       selfHeal: true
