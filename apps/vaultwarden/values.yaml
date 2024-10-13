@@ -3,7 +3,7 @@ vaultwarden:
   signupsAllowed: false
   image:
     repository: docker.io/vaultwarden/server
-    tag: 1.32.1
+    tag: 1.32.2
     pullPolicy: IfNotPresent
   ingress:
     host: vaultwarden.apps.legodard.fr
